@@ -4,6 +4,9 @@ import { useState } from 'react';
 import { ApplicationsLibrary } from './ApplicationsLibrary';
 import { DashboardSummary } from './DashboardSummary';
 import { WorkspaceHeader } from './WorkspaceHeader';
+import { OwnerDashboard } from './OwnerDashboard';
+import { EmployeeDashboard } from './EmployeeDashboard';
+import { ownerPreviewData, employeePreviewData } from './RoleDashboardFixtures';
 import type { HrAccess, PortalApp, PortalUser, ProductAccess } from './contracts';
 
 // Deliberately synthetic. Never embed a real employee, tenant, credential,
@@ -23,7 +26,7 @@ const access: ProductAccess[] = [
 ];
 
 type PreviewRole = 'owner' | 'employee' | 'customer';
-type PreviewView = 'overview' | 'applications';
+type PreviewView = 'overview' | 'applications' | 'role-dashboard';
 
 function previewIdentity(role: PreviewRole): { user: PortalUser; flags: HrAccess } {
   const defaults = { employee: false, pendingLink: false, management: false, governHr: false };
@@ -43,7 +46,7 @@ function previewIdentity(role: PreviewRole): { user: PortalUser; flags: HrAccess
 
 export function WorkspacePreview() {
   const [role, setRole] = useState<PreviewRole>('owner');
-  const [view, setView] = useState<PreviewView>('overview');
+  const [view, setView] = useState<PreviewView>('role-dashboard');
   const { user, flags } = previewIdentity(role);
 
   return (
@@ -70,10 +73,26 @@ export function WorkspacePreview() {
                 onClick={() => setView('overview')}>Overview</button>
               <button type="button" aria-pressed={view === 'applications'}
                 onClick={() => setView('applications')}>Applications</button>
+              <button type="button" aria-pressed={view === 'role-dashboard'}
+                onClick={() => setView('role-dashboard')}>Role dashboard</button>
             </div>
           </div>
         </section>
-        {view === 'overview'
+        {view === 'role-dashboard'
+          ? <main className={'workspace-content role-preview-content role-preview-' + role}
+              id="mainContent" tabIndex={-1}>
+              {role === 'owner' ? <OwnerDashboard data={ownerPreviewData} /> :
+                role === 'employee' ? <EmployeeDashboard data={employeePreviewData} /> :
+                <section className="role-customer-note" aria-labelledby="customerNoteTitle">
+                  <h1 id="customerNoteTitle">Customer workspace</h1>
+                  <p>Customer accounts use the general access overview and assigned applications.
+                    Internal employee and owner dashboards are not available to customers.</p>
+                  <button type="button" onClick={() => setView('overview')}>
+                    View access overview
+                  </button>
+                </section>}
+            </main>
+          : view === 'overview'
           ? <main className="workspace-content" id="mainContent" tabIndex={-1}>
               <section className="page-intro" id="overview" aria-labelledby="pageTitle">
                 <h1 id="pageTitle">Your workspace<span className="title-period">.</span></h1>

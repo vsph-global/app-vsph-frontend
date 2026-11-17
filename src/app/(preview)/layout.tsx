@@ -5,6 +5,11 @@ import '../(workspace)/portal-navigation.css';
 import '../(workspace)/crm-workspace.css';
 import '../(workspace)/workspace-overrides.css';
 import './preview.css';
+import './owner-overview.css';
+import './employee-bento.css';
+import './work-activity.css';
+import './calendar.css';
+import './role-dashboard.css';
 
 export default function PreviewRootLayout({ children }: Readonly<{ children: ReactNode }>) {
   return (

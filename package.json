@@ -8,7 +8,7 @@
     "start": "next start",
     "lint": "eslint",
     "typecheck": "node scripts/clean-next-route-types.mjs && next typegen && tsc --noEmit",
-    "test:migration": "node --test tests/migration-source.test.mjs tests/workspace-entry.test.mjs tests/workspace-preview.test.mjs tests/invitation-entry.test.mjs tests/employee-entry.test.mjs",
+    "test:migration": "node --test tests/migration-source.test.mjs tests/workspace-entry.test.mjs tests/workspace-preview.test.mjs tests/invitation-entry.test.mjs tests/role-dashboards.test.mjs tests/employee-entry.test.mjs",
     "check": "npm run test:migration && npm run typecheck && npm run lint && npm run build && npm run verify:preview-route",
     "verify:preview-route": "node scripts/verify-preview-route.mjs"
   },

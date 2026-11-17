@@ -1,0 +1,12 @@
+{
+  "frozen": "3b3a1535873aa0517aea41da32a407f3d9680547",
+  "files": {
+    "docs/reference/role-dashboards/owner-overview.css": "df93f9572bf93298d944f0d35dc5ce8cb7f223b2",
+    "docs/reference/role-dashboards/owner-overview.js": "bdb012e707ba2fffe15b609f99982627586a15be",
+    "docs/reference/role-dashboards/employee-bento.css": "35678e65042121c809047f50402440a641395c78",
+    "docs/reference/role-dashboards/work-activity.css": "ac1e832ce163e699e5bb973a3f224e91ae4d8835",
+    "docs/reference/role-dashboards/work-activity.js": "208fe3ebf805daaa7bd4a461bcbaa7e683618d91",
+    "docs/reference/role-dashboards/calendar.css": "912b1917db00e5b2a4327fb9ae1442825649fb8d",
+    "docs/reference/role-dashboards/calendar.js": "44e0e460d3e4ce89c4caedc931ce78fb56000efe"
+  }
+}
