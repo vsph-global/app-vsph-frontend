@@ -1,0 +1,11 @@
+{
+  "frozen": "3b3a1535873aa0517aea41da32a407f3d9680547",
+  "files": {
+    "docs/reference/projects/views/projects.html": "e44519dc617238ddf8289805b9106c6669f21d5b",
+    "docs/reference/projects/public/projects.css": "95da559454d80e5cbf1b7f0d6eebcf6f90d193c4",
+    "docs/reference/projects/public/project-detail-v2.css": "cc570d216d893c2cf18e4e3b447f52f65b92cf3f",
+    "docs/reference/projects/public/projects.js": "728ba6d1c2c501d0bcfc9bf1fa4200d40ed9a0e7",
+    "docs/reference/projects/public/project-detail-v2.js": "969a97133c60e1611fa2fe4e243d3fe06d62e9e0",
+    "docs/reference/projects/public/project-delivery.js": "b998d4f26fc6ab5435dad35c258f449f85ebd1eb"
+  }
+}

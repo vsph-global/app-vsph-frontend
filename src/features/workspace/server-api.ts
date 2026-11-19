@@ -9,7 +9,7 @@ type ApiResult =
   | { kind: 'unauthorized' }
   | { kind: 'unavailable' };
 
-function approvedInternalOrigin(): string | null {
+export function approvedInternalOrigin(): string | null {
   const raw = process.env.VSPH_INTERNAL_API_ORIGIN;
   if (!raw) return null;
   try {
@@ -25,9 +25,24 @@ function approvedInternalOrigin(): string | null {
 
 export async function portalApi(path: string): Promise<ApiResult> {
   // Never allow arbitrary paths to turn this helper into a public proxy.
-  if (!/^\/api\/(?:auth\/me|hrms\/access|apps|workspaces|apps\/[A-Z][A-Z0-9_]{1,39}\/contexts)$/.test(path)) {
-    return { kind: 'unavailable' };
+  const establishedRead = /^\/api\/(?:auth\/me|hrms\/access|apps|workspaces|apps\/[A-Z][A-Z0-9_]{1,39}\/contexts)$/.test(path);
+  // Explicitly limited to the existing, authenticated read-only project list.
+  const projectListPath = /^\/api\/projects\?([^#]*)$/.exec(path);
+  let permittedProjects = false;
+  if (projectListPath) {
+    const params = new URLSearchParams(projectListPath[1]);
+    const keys = [...params.keys()];
+    const q = params.get('q');
+    const status = params.get('status');
+    const cursor = params.get('cursor');
+    permittedProjects = keys.length >= 2 && keys.length <= 3 &&
+      new Set(keys).size === keys.length &&
+      keys.every(key => ['q', 'status', 'cursor'].includes(key)) &&
+      q !== null && q.length <= 100 && !/[\u0000-\u001f\u007f]/.test(q) &&
+      status !== null && ['', 'planned', 'active', 'paused', 'completed', 'archived'].includes(status) &&
+      (cursor === null || /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(cursor));
   }
+  if (!establishedRead && !permittedProjects) return { kind: 'unavailable' };
   const portalCookie = (await cookies()).get('vsph.portal.sid')?.value;
   if (!portalCookie || !/^[A-Za-z0-9_-]{32,128}$/.test(portalCookie)) {
     return { kind: 'unauthorized' };

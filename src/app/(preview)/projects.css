@@ -1,0 +1,350 @@
+.project-workspace {
+  color: #00255a;
+}
+.project-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+  gap: 20px;
+  margin: 12px 0 28px;
+}
+.project-heading h1 {
+  font-size: clamp(28px, 4vw, 40px);
+  letter-spacing: -0.03em;
+  margin: 0 0 12px;
+}
+.project-heading p {
+  line-height: 1.6;
+  color: #536984;
+  max-width: 680px;
+}
+.project-workspace button {
+  min-height: 44px;
+  padding: 10px 15px;
+  border: 1px solid #b8c8dc;
+  border-radius: 5px;
+  background: white;
+  color: #00255a;
+  font: inherit;
+  cursor: pointer;
+}
+.project-workspace button[type="submit"],
+#newProject {
+  background: #0069c8;
+  color: white;
+  border-color: #0069c8;
+}
+.project-workspace button:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+.actions {
+  display: flex;
+  gap: 10px;
+}
+.project-panel {
+  background: white;
+  border: 1px solid #dce3ec;
+  border-radius: 8px;
+  padding: 24px;
+  margin: 24px 0;
+}
+.project-panel h2 {
+  font-size: 21px;
+  margin: 0 0 20px;
+}
+.project-workspace form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  margin: 20px 0;
+}
+.project-workspace label {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  font-size: 13px;
+  font-weight: 600;
+  min-width: 0;
+}
+.project-workspace input,
+.project-workspace select,
+.project-workspace textarea {
+  font: inherit;
+  min-height: 44px;
+  width: 100%;
+  border: 1px solid #b8c8dc;
+  border-radius: 5px;
+  padding: 10px;
+  background: #fff;
+  color: #00255a;
+}
+.project-workspace textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+.project-workspace input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+  min-height: 20px;
+}
+.project-workspace label:has(input[type="checkbox"]) {
+  flex-direction: row;
+  align-items: center;
+  min-height: 44px;
+}
+.project-workspace select[multiple] {
+  min-height: 100px;
+}
+.project-workspace form > button {
+  align-self: end;
+}
+.project-workspace .project-filters {
+  grid-template-columns: 2fr 1fr auto;
+}
+.project-table-wrap {
+  overflow: auto;
+}
+.project-workspace table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  min-width: 630px;
+}
+.project-workspace th,
+.project-workspace td {
+  text-align: left;
+  padding: 14px 12px;
+  border-bottom: 1px solid #e3eaf2;
+  vertical-align: top;
+}
+.project-workspace th {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #536984;
+}
+.project-workspace td small {
+  display: block;
+  color: #536984;
+  margin-top: 6px;
+}
+.project-workspace table button,
+.project-workspace table select {
+  font-size: 12px;
+}
+.project-workspace a {
+  color: #0069c8;
+}
+.project-summary {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1px;
+  border: 1px solid #dce3ec;
+  background: #dce3ec;
+  margin-top: 24px;
+}
+.project-summary > div {
+  padding: 20px;
+  background: white;
+  font-size: 13px;
+  color: #536984;
+}
+.project-summary strong {
+  display: block;
+  font-size: 24px;
+  color: #00255a;
+  margin-top: 8px;
+}
+.project-sections {
+  display: flex;
+  gap: 24px;
+  flex-wrap: wrap;
+  padding: 24px 0;
+}
+.project-panel summary {
+  cursor: pointer;
+  min-height: 44px;
+  padding: 12px 0;
+  font-weight: 600;
+}
+.project-panel article {
+  border-bottom: 1px solid #e3eaf2;
+  padding: 14px 0;
+}
+.project-panel article p {
+  white-space: pre-wrap;
+  line-height: 1.6;
+}
+.project-panel li {
+  margin: 12px 0;
+  line-height: 1.5;
+}
+#projectMessage {
+  line-height: 1.6;
+  color: #9b2c22;
+}
+.project-workspace :focus-visible {
+  outline: 3px solid #50c0e8;
+  outline-offset: 3px;
+}
+.project-workspace [hidden] {
+  display: none !important;
+}
+@media (max-width: 750px) {
+  .project-heading {
+    flex-direction: column;
+  }
+  .project-workspace form,
+  .project-workspace .project-filters {
+    grid-template-columns: 1fr;
+  }
+  .project-summary {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .project-panel {
+    padding: 18px;
+  }
+  .project-sections {
+    gap: 16px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .project-workspace * {
+    scroll-behavior: auto !important;
+  }
+}
+.project-workspace #teamList,
+.project-workspace #projectList {
+  overflow: auto;
+  max-width: 100%;
+}
+.project-panel {
+  min-width: 0;
+}
+.project-summary > div:last-child strong {
+  font-size: 16px;
+  line-height: 1.45;
+}
+.delivery-controls{display:flex;align-items:end;gap:12px;flex-wrap:wrap;margin:16px 0}.delivery-controls label{display:grid;gap:6px}.delivery-connections{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));gap:12px;margin:18px 0}.delivery-connections article{border:1px solid #dce4ec;border-radius:10px;padding:16px;min-width:0;overflow-wrap:anywhere}.delivery-connections button{margin:4px}#engineeringContent select{max-width:100%;min-height:44px}#engineeringRecords table{min-width:800px}#engineeringRecords td{max-width:300px;overflow-wrap:anywhere}#engineeringTimeline li{margin-bottom:12px;overflow-wrap:anywhere}#repositoryDiscovery{display:flex;gap:10px;flex-wrap:wrap}
+#notificationList li{display:flex;flex-wrap:wrap;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid #dce4ec}#notificationList small{display:block}#projectReport table{min-width:1000px}#projectOperations summary{min-height:44px;cursor:pointer}#notificationPreferences label{display:flex;align-items:center}
+#engineeringRecords table{min-width:1100px}#engineeringRecords td:nth-child(1){min-width:180px}#engineeringRecords td:nth-child(2),#engineeringRecords td:nth-child(3){white-space:nowrap}#engineeringRecords td:last-child{min-width:240px}#engineeringRecords td form{display:flex;flex-wrap:wrap;margin:10px 0;gap:8px}#engineeringRecords td form select{min-width:150px;max-width:190px}#sessionList li{display:flex;flex-wrap:wrap;align-items:center;gap:12px}
+
+/* Feedback #5, #8-10: guided creation and explicit manager actions. */
+.project-create-heading{display:grid;gap:6px;margin-bottom:22px}
+.project-create-heading h2{margin:0}
+.project-create-heading p{margin:0;color:#536984;line-height:1.65}
+.project-create-heading .project-kicker{color:#0069C8;font-size:11px;font-weight:700;letter-spacing:.12em}
+.project-workspace .project-creation form{display:block;margin:0}
+.project-create-progress{font-size:13px;color:#536984;font-weight:650;padding:12px 0;margin:0 0 14px;border-bottom:1px solid #DCE5EF}
+.project-create-step{border:0;padding:0;margin:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.project-create-step[hidden]{display:none}
+.project-create-step legend{grid-column:1/-1;font-size:20px;font-weight:650;padding:0;margin-bottom:12px}
+.project-create-step label:has([name="description"]),.project-create-step label:has([name="products"]),.project-create-step label:has([name="clientVisible"]),.project-step-hint,.project-create-review{grid-column:1/-1}
+.project-step-hint,.project-section-hint{font-size:13px;line-height:1.6;color:#536984;margin:0 0 16px}
+.project-create-review{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px 18px}
+.project-create-review dt{font-size:12px;color:#536984}
+.project-create-review dd{margin:0 0 10px;color:#00255A;font-weight:600;overflow-wrap:anywhere}
+.project-create-actions{display:flex;flex-wrap:wrap;align-items:center;justify-content:flex-end;gap:10px;margin-top:26px;padding-top:18px;border-top:1px solid #DCE5EF}
+.project-creation .project-create-actions button[type="submit"]{background:#0069C8;color:white;border-color:#0069C8}
+.project-create-actions button:first-child{margin-right:auto}
+.project-section-head{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:12px}
+.project-section-head h2{margin:0}
+.project-section-head button{background:#0069C8;color:white;border-color:#0069C8}
+@media(max-width:750px){.project-create-step,.project-create-review{grid-template-columns:1fr}}
+
+/* Project applications are independently tracked from reusable product catalog links. */
+.project-applications .project-section-head{align-items:flex-start}
+.project-applications h3{font-size:16px;font-weight:650;margin:0 0 12px}
+.project-applications h4{font-size:15px;margin:0;font-weight:650;overflow-wrap:anywhere}
+.project-app-group{border-top:1px solid #E1E9F2;padding-top:20px;margin-top:20px}
+.project-app-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));gap:14px}
+.project-app-card{display:flex;flex-direction:column;align-items:flex-start;gap:10px;border:1px solid #DCE4EE;border-radius:12px;padding:18px;background:#FFF}
+.project-app-card-title{display:flex;gap:10px;justify-content:space-between;align-items:flex-start;width:100%}
+.project-app-type{text-transform:uppercase;font-size:10px;letter-spacing:.1em;color:#0069C8;font-weight:700}
+.project-app-state{font-size:11px;color:#00255A;background:#EAF3FB;padding:5px 9px;border-radius:999px;white-space:nowrap}
+.project-app-description{color:#536984;font-size:13px;line-height:1.6;margin:0;white-space:pre-wrap;overflow-wrap:anywhere}
+.project-app-visibility{color:#61748B;font-size:11px}
+.project-app-links{display:flex;gap:14px;flex-wrap:wrap;font-size:13px}
+.project-app-editor{background:#F8FBFF;border:1px solid #C6D9EB;border-radius:12px;margin-top:24px;padding:22px}
+.project-app-editor h3{margin:0 0 10px}
+.project-workspace #customApplicationForm{margin:0}
+#customApplicationForm .project-app-wide{grid-column:1/-1}
+.project-app-sharing{display:flex!important;align-items:center;gap:10px}
+.project-app-sharing input{width:20px;min-height:20px}
+#customApplicationForm .project-app-actions{display:flex;align-items:center;justify-content:flex-end;gap:12px}
+#saveCustomApplication,#newCustomApplication{background:#0069C8;color:#FFF;border-color:#0069C8}
+@media(max-width:750px){.project-app-editor{padding:16px}#customApplicationForm .project-app-wide{grid-column:auto}}
+
+/* Manager team allocations and active identity selection. */
+.project-workforce-summary p{color:#536984;line-height:1.6;font-size:13px;margin:17px 0}.workforce-actions{display:flex;gap:8px;flex-wrap:wrap}.workforce-actions button{white-space:normal;font-size:12px;min-height:40px;padding:8px 10px}.project-workspace #workforceRoster{margin-top:12px}.project-workspace #teamEditor .project-section-hint{grid-column:1/-1;margin:0;font-size:12px;color:#536984}
+
+
+/* Feedback #2–3: compact project creation and confirmed lifecycle actions. */
+body.project-create-open{overflow:hidden}
+.project-workspace .project-modal-backdrop{
+ position:fixed;inset:0;z-index:85;display:grid;place-items:center;
+ padding:clamp(12px,2vw,28px);background:rgba(6,25,55,.47);
+ backdrop-filter:blur(5px);-webkit-backdrop-filter:blur(5px);
+ animation:project-modal-overlay .17s ease both
+}
+.project-workspace .project-modal-backdrop[hidden]{display:none!important}
+.project-workspace .project-modal {
+ width:min(100%,760px);max-height:min(90dvh,900px);overflow-y:auto;overscroll-behavior:contain;
+ box-shadow:0 28px 80px rgba(1,25,65,.24);border-radius:17px;
+ padding:clamp(22px,3vw,34px);margin:0;animation:project-modal-rise .22s ease both;
+ scrollbar-width:thin
+}
+.project-modal .project-create-heading{position:relative;padding-right:36px}
+.project-workspace .project-modal-close{
+ position:absolute;top:-5px;right:0;min-height:44px;width:44px;padding:0;
+ display:grid;place-items:center;font-size:24px;line-height:1;
+ border:1px solid #dce6f1;border-radius:10px;color:#61748b;background:#f5f9fd
+}
+.project-workspace .project-modal-close:hover{background:#e8f1fc;color:#083d75}
+.project-workspace .project-creation form{margin:0}
+.project-workspace .project-creation .project-create-step{gap:17px 20px}
+.project-workspace .project-modal .project-create-step legend{font-size:17px}
+.project-workspace .project-modal input,.project-workspace .project-modal select,
+.project-workspace .project-modal textarea{border-radius:9px}
+.project-modal .project-step-hint{margin:0 0 4px;line-height:1.5}
+.project-modal .project-create-progress{padding-bottom:13px;margin-bottom:22px}
+.project-create-success{text-align:center;padding:18px 4px 6px}
+.project-create-success h2{margin:12px 0 8px}
+.project-create-success p{line-height:1.7;color:#5a7088;max-width:450px;margin-inline:auto}
+.project-success-icon{width:66px;height:66px;border-radius:50%;background:#e5f6ef;color:#0b8064;font-size:31px;display:grid;place-items:center;margin:0 auto;border:1px solid #cdeadd}
+.project-create-success-actions{display:flex;flex-wrap:wrap;justify-content:center;gap:12px;margin-top:23px}
+.project-create-success-actions a,.project-workspace .project-create-success-actions button{padding:12px 18px;min-height:44px;border-radius:9px;font-size:13px;font-weight:700;text-decoration:none}
+.project-create-success-actions a{background:#0069c8;color:#fff}
+.project-row-menu{display:inline-block;position:relative;margin-top:8px;font-size:12px}
+.project-row-menu summary{cursor:pointer;color:#075bb0;list-style:none;font-size:12px;font-weight:650;display:inline-flex;align-items:center;gap:5px;min-height:44px}
+.project-row-menu summary:after{content:"⌄";font-size:13px}
+.project-row-menu[open]{z-index:5}
+.project-row-menu button{display:block;background:#fff;border:1px solid #dce5ef;border-radius:8px;color:#9b302e;font-size:12px;min-height:36px;text-align:left;margin-top:6px}
+.project-row-menu button:hover{background:#fff2f1}
+.project-delete-dialog{width:min(94vw,470px);max-height:90dvh;border:1px solid #d5e0ed;border-radius:15px;box-shadow:0 28px 80px rgba(4,20,42,.26);padding:28px;color:#00255a}
+.project-delete-dialog::backdrop{background:rgba(6,25,55,.46);backdrop-filter:blur(3px)}
+.project-delete-dialog h2{font-size:21px;margin:0 0 10px}
+.project-delete-dialog p{font-size:13px;line-height:1.65;color:#526a83}
+.project-delete-dialog label{display:grid;gap:7px;font-size:12px;font-weight:700}
+.project-delete-dialog input{font-size:14px;min-height:44px;border:1px solid #bbcadd;border-radius:8px;padding:11px}
+.project-delete-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:20px;flex-wrap:wrap}
+.project-delete-actions button{min-height:42px;border-radius:8px;border:1px solid #bfcee0;padding:10px 15px;cursor:pointer}
+#confirmProjectDelete{background:#a42b2b;color:#fff;border-color:#a42b2b}
+#projectDeleteMessage{color:#a42b2b}
+@keyframes project-modal-overlay{from{opacity:0}to{opacity:1}}
+@keyframes project-modal-rise{from{opacity:.5;transform:translateY(12px) scale(.985)}to{opacity:1;transform:translateY(0) scale(1)}}
+@media(max-width:620px){
+ .project-workspace .project-modal-backdrop{padding:0;align-items:end}
+ .project-workspace .project-modal{width:100%;max-height:94dvh;border-radius:18px 18px 0 0;padding:22px 18px}
+ .project-workspace .project-creation .project-create-step,.project-create-review{grid-template-columns:minmax(0,1fr)}
+ .project-modal .project-create-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}
+ .project-create-actions button:first-child{margin-right:0}
+}
+@media(prefers-reduced-motion:reduce){.project-workspace .project-modal-backdrop,.project-workspace .project-modal{animation:none;transition:none}}
+
+.project-create-error{color:#922d2d;background:#fff0ee;border:1px solid #eebcba;border-radius:9px;padding:11px 13px;line-height:1.5;margin:0 0 15px}
+.project-create-error[hidden]{display:none!important}
+
+.project-create-notice{color:#215378;background:#eff7ff;border:1px solid #c5dff5;border-radius:9px;padding:11px 13px;line-height:1.5;margin:0 0 15px;font-size:13px}
+.project-create-notice[hidden]{display:none!important}

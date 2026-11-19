@@ -1,0 +1,19 @@
+/* Authenticated, read-only project list: visual additions separate from the immutable legacy CSS. */
+.project-workspace .project-live-count{margin:0 0 12px;color:#536984;font-size:13px}
+.project-workspace .project-live-empty{padding:28px;color:#536984}
+.project-workspace .project-live-refresh,
+.project-workspace .project-live-more{
+ display:inline-flex;align-items:center;justify-content:center;
+ min-height:44px;padding:10px 15px;background:#fff;border:1px solid #B8C8DC;
+ border-radius:6px;color:#0069C8;text-decoration:none;font-weight:600
+}
+.project-workspace .project-live-refresh:hover,
+.project-workspace .project-live-more:hover {background:#EAF3FA;border-color:#0069C8}
+.project-workspace .project-live-more{margin-top:14px}
+.project-workspace [role="region"][tabindex="0"]:focus-visible{
+ outline:3px solid #50C0E8;outline-offset:3px
+}
+@media(max-width:750px) {
+ .project-workspace .project-heading .actions{flex-wrap:wrap;gap:10px}
+ .project-workspace .project-live-refresh{width:100%}
+}

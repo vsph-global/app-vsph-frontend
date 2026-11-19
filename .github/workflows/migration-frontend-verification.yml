@@ -5,6 +5,8 @@ on:
     branches:
       - migration/employee-account-entry
       - migration/role-dashboards-preview
+      - migration/projects-readonly-port
+      - migration/operations-ui-port
   pull_request:
     branches:
       - dev

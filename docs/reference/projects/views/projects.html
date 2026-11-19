@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#00255A">
+  <title>Projects | VSPH Control Center</title>
+  <link rel="stylesheet" href="/dashboard.css"><link rel="stylesheet" href="/projects.css"><link rel="stylesheet" href="/project-detail-v2.css">
+</head>
+<body class="workspace-body">
+  <!-- portal:icons -->
+
+  <a class="skip-link" href="#mainContent">Skip to content</a>
+
+  <div class="workspace-shell">
+    <!-- portal:shell -->
+
+    <div class="workspace-main" id="mainContent">
+      <header class="workspace-topbar"></header>
+
+      <main class="workspace-content project-workspace">
+        <header class="project-heading"><div><h1 id="projectTitle">Projects</h1><p id="projectSubtitle">Internal work and customer delivery, with explicit project access.</p></div><div class="actions"><button id="reloadProjects" type="button">Refresh</button><button id="newProject" type="button" hidden>New project</button></div></header>
+        <p id="projectMessage" role="status" aria-live="polite"></p>
+        <div id="projectCreateOverlay" class="project-modal-backdrop" hidden>
+  <section id="creation" class="project-panel project-creation project-modal" role="dialog" aria-modal="true" aria-labelledby="createProjectTitle" hidden>
+  <header class="project-create-heading"><button id="closeCreateProject" class="project-modal-close" type="button" aria-label="Close project creation">×</button><p class="project-kicker">NEW PROJECT</p><h2 id="createProjectTitle">Create project</h2><p>Set up a client or internal engagement, with owner-approved project management.</p></header>
+  <p id="projectCreateNotice" class="project-create-notice" role="status" hidden></p>
+  <p id="projectCreateError" class="project-create-error" role="alert" aria-live="assertive" hidden></p>
+  <form id="createProjectForm" novalidate></form>
+  <div id="projectCreateSuccess" class="project-create-success" role="status" aria-live="polite" hidden>
+   <span class="project-success-icon" aria-hidden="true">✓</span>
+   <h2>Project created</h2>
+   <p id="projectCreateSuccessDescription"></p>
+   <div class="project-create-success-actions"><a id="viewCreatedProject" href="/projects">View project</a><button id="backToProjectPortfolio" type="button">Back to projects</button></div>
+  </div>
+  </section></div>
+  <dialog id="projectDeleteDialog" class="project-delete-dialog" aria-labelledby="projectDeleteTitle">
+    <form id="projectDeleteForm" method="dialog">
+      <h2 id="projectDeleteTitle">Permanently delete project?</h2>
+      <p>This is available only for archived projects without retained delivery, customer, financial, or audit-dependent records. Existing company records will never be cascaded.</p>
+      <p id="projectDeleteDescription" class="project-delete-description"></p>
+      <label>Type the project key to confirm<input id="projectDeleteKey" autocomplete="off" required></label>
+      <p id="projectDeleteMessage" role="status" aria-live="polite"></p>
+      <div class="project-delete-actions"><button type="button" id="cancelProjectDelete">Cancel</button><button id="confirmProjectDelete" type="submit">Delete project permanently</button></div>
+    </form>
+  </dialog>
+        <section id="portfolio"><form id="projectFilters" class="project-filters"><label>Search projects<input name="q" maxlength="100" type="search"></label><label>Lifecycle<select name="status"><option value="">All states</option><option>planned</option><option>active</option><option>paused</option><option>completed</option><option>archived</option></select></label><button type="submit">Filter</button></form><div id="projectList" aria-busy="true"></div><button id="moreProjects" type="button" hidden>Load more</button></section>
+        <section id="projectDetail" class="project-v2" hidden>
+          <div class="project-v2-breadcrumb"><a href="/projects">← All projects</a><span aria-hidden="true">/</span><span id="projectCrumb">Project overview</span></div>
+          <div id="projectMeta" class="project-v2-meta" aria-live="polite"></div>
+          <nav id="projectViewNav" class="project-sections project-v2-nav" aria-label="Project views">
+            <a href="?view=overview" data-project-view="overview" aria-current="page">Overview</a>
+            <a href="?view=tasks" data-project-view="tasks">Tasks</a>
+            <a href="?view=milestones" data-project-view="milestones">Milestones</a>
+            <a href="?view=team" data-project-view="team">Team</a>
+            <a href="?view=applications" data-project-view="applications">Applications</a>
+            <a href="?view=delivery" data-project-view="delivery">Delivery</a>
+            <a href="?view=engineering" data-project-view="engineering">Engineering</a>
+            <a href="?view=activity" data-project-view="activity">Activity</a>
+            <a href="?view=settings" data-project-view="settings" hidden>Settings</a>
+          </nav>
+          <section id="overview" class="project-view-pane" aria-label="Project overview">
+            <div id="projectSummary" class="project-summary" aria-label="Key project metrics"></div>
+            <div class="project-v2-overview-grid">
+              <article class="project-v2-card" aria-labelledby="projectNextTitle"><div class="project-v2-card-head"><div><p class="project-v2-eyebrow">FOCUS</p><h2 id="projectNextTitle">Needs attention</h2></div><span class="project-v2-icon" aria-hidden="true">↗</span></div><div id="projectNextActions"></div></article>
+              <article class="project-v2-card" aria-labelledby="projectRoadmapTitle"><div class="project-v2-card-head"><div><p class="project-v2-eyebrow">DELIVERY</p><h2 id="projectRoadmapTitle">Milestone roadmap</h2></div><a href="?view=milestones" data-project-open="milestones">View milestones</a></div><div id="projectRoadmap"></div></article>
+              <article class="project-v2-card" aria-labelledby="projectRiskTitle"><div class="project-v2-card-head"><div><p class="project-v2-eyebrow">OWNERSHIP</p><h2 id="projectRiskTitle">Risks &amp; blockers</h2></div></div><div id="projectRisks"></div></article>
+              <article class="project-v2-card" aria-labelledby="projectResourcesTitle"><div class="project-v2-card-head"><div><p class="project-v2-eyebrow">REFERENCE</p><h2 id="projectResourcesTitle">Project resources</h2></div></div><div id="projectResources"></div></article>
+              <article class="project-v2-card project-v2-wide" aria-labelledby="projectUpdatesTitle"><div class="project-v2-card-head"><div><p class="project-v2-eyebrow">STATUS</p><h2 id="projectUpdatesTitle">Weekly updates</h2></div></div><div id="projectWeeklyUpdates"></div></article>
+            </div>
+          </section>
+          <section id="settings" class="project-panel" hidden><details><summary>Project settings and ownership</summary><form id="projectSettings"></form></details></section>
+          <section id="work" class="project-panel"><div class="project-section-head"><h2>Tasks</h2><button id="newProjectTask" type="button" hidden>Assign a task</button></div><div id="taskFilters"></div><div id="taskList" class="project-table-wrap"></div><details id="taskEditor"><summary>Create or edit task</summary><form id="taskForm"></form></details></section>
+          <section id="milestones" class="project-panel"><h2>Milestones</h2><div id="milestoneList"></div><div id="milestoneChecklistPanel" class="project-v2-checklist-panel"></div><details id="milestoneEditor"><summary>Create or edit milestone</summary><form id="milestoneForm"></form></details></section>
+          <section id="team" class="project-panel"><div class="project-section-head"><h2>Project team</h2><button id="addProjectMember" type="button" hidden>Add team member</button></div><p class="project-section-hint">Project managers can grant access to eligible accounts within this project. HR authority and customer product access are managed separately.</p><div id="teamList"></div><div id="workforceSummary" class="project-workforce-summary" aria-live="polite"></div><div id="workforceRoster" class="project-table-wrap"></div><details id="teamEditor"><summary>Add or change a project member</summary><form id="memberForm"></form></details></section>
+          <section id="projectApplications" class="project-panel project-applications" aria-labelledby="projectApplicationsTitle">
+            <div class="project-section-head">
+              <div><h2 id="projectApplicationsTitle">Applications</h2>
+                <p class="project-section-hint">Reusable VSPH products and applications built specifically for this project are tracked separately.</p></div>
+              <button id="newCustomApplication" type="button" hidden>New custom application</button>
+            </div>
+            <div class="project-app-group"><h3>Linked VSPH products</h3>
+              <p class="project-section-hint">A product link does not grant a customer subscription or application access.</p>
+              <div id="linkedProductsList" class="project-app-cards"></div></div>
+            <div class="project-app-group"><h3>Custom project applications</h3>
+              <p id="customApplicationStatus" role="status" aria-live="polite"></p>
+              <div id="customApplicationList" class="project-app-cards"></div></div>
+            <div id="customApplicationEditor" class="project-app-editor" hidden>
+              <h3 id="customApplicationEditorTitle">Create custom application</h3>
+              <form id="customApplicationForm">
+                <label>Application name<input name="name" required maxlength="150" placeholder="e.g. Guest booking portal"></label>
+                <label>Lifecycle<select name="status" required>
+                  <option value="planned">Planned</option><option value="building">In development</option>
+                  <option value="testing">Testing</option><option value="live">Live</option>
+                  <option value="paused">Paused</option><option value="retired">Retired</option></select></label>
+                <label class="project-app-wide">Description<textarea name="description" maxlength="2000" rows="3" placeholder="Describe the client-specific application"></textarea></label>
+                <label>Git repository HTTPS URL (optional)<input name="repositoryUrl" type="url" maxlength="1000" placeholder="https://github.com/owner/repository"></label>
+                <label>Deployment HTTPS URL (optional)<input name="deploymentUrl" type="url" maxlength="1000" placeholder="https://app.example.com"></label>
+                <label class="project-app-wide project-app-sharing"><input name="shared" type="checkbox"> Visible to explicitly authorized customer project viewers</label>
+                <p class="project-section-hint project-app-wide">This saves application metadata only. It does not deploy software, create a product entitlement, or grant repository permissions.</p>
+                <div class="project-app-actions project-app-wide"><button type="button" id="cancelCustomApplication">Cancel</button><button type="submit" id="saveCustomApplication">Save application</button></div>
+              </form>
+            </div>
+          </section>
+          <section id="delivery" class="project-panel"><h2>Deliverables and comments</h2><div id="deliverableList"></div><form id="deliverableForm"></form><div id="commentList"></div><form id="commentForm"></form></section>
+          <section id="engineering" class="project-panel" hidden><h2>Engineering delivery</h2><p id="engineeringMessage" role="status" aria-live="polite"></p><div id="engineeringContent"></div></section>
+          <section id="activity" class="project-panel"><h2>Activity history</h2><p>Latest 200 events, recorded with each mutation.</p><ol id="activityList"></ol></section>
+        </section>
+      </main>
+
+      <footer class="workspace-footer">
+        <span>© 2026 VSPH. All rights reserved.</span>
+        <span>Control Center</span>
+      </footer>
+    </div>
+  </div>
+  <script defer src="/project-delivery.js"></script>
+  <script defer src="/projects.js"></script>
+  <script defer src="/project-detail-v2.js"></script>
+</body>
+</html>

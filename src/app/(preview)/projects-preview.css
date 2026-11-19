@@ -1,0 +1,44 @@
+/* Project integration only; archived legacy CSS remains unchanged. */
+.project-preview-workspace{width:min(1664px,100%);max-width:none;min-width:0}
+.project-preview-workspace .project-heading .actions button:disabled{opacity:.5;cursor:not-allowed}
+.project-preview-open,.project-preview-back{border:0!important;background:transparent!important;
+ color:#0069C8!important;padding:2px!important;min-height:0!important;text-align:left;font-weight:700!important}
+.project-preview-open:hover,.project-preview-back:hover{text-decoration:underline}
+.project-preview-count{margin:0 0 12px;color:#61748A;font-size:12px}
+.project-preview-empty{padding:28px;color:#61748A}
+.project-preview-workspace progress{display:block;width:135px;accent-color:#0069C8}
+.project-preview-badge{display:inline-flex;border:1px solid #DCE5EF;background:#EFF5FA;
+ border-radius:30px;padding:4px 9px;color:#00255A;font-size:12px;text-transform:capitalize}
+.project-preview-badge.status-active{background:#E9F7F2;color:#08694F}
+.project-preview-badge.status-paused{background:#FFF4D8;color:#7C5200}
+.project-preview-workspace .project-v2-nav button{
+ display:inline-flex;min-height:45px;align-items:center;white-space:nowrap;cursor:pointer;
+ border:0;border-bottom:2px solid transparent;background:transparent;border-radius:0;
+ padding:12px 14px;color:#59708B;font-size:13px;font-weight:650}
+.project-preview-workspace .project-v2-nav button.is-active{border-bottom-color:#0865BD;color:#0865BD;background:#F6FAFF}
+.project-preview-disabled-tab{padding:12px 14px;color:#8393A4;opacity:.6;font-size:13px}
+.project-preview-workspace .project-v2-card-head button{border:0;background:none;padding:0;min-height:0;color:#0069C8}
+.project-preview-task-filters{display:flex;gap:8px;margin-bottom:14px}
+.project-preview-task-filters button[aria-pressed="true"]{background:#00255A;color:white}
+.project-preview-milestones{display:grid;gap:14px}
+.project-preview-milestone{border:1px solid #DCE5EF;border-radius:12px;padding:16px!important}
+.project-preview-milestone-head{display:flex;justify-content:space-between;gap:10px;align-items:center}
+.project-preview-milestone-head h3{font-size:16px;margin:0}
+.project-preview-milestone-head p{font-size:12px;color:#61748A}
+.project-preview-milestone progress{width:100%;margin:12px 0}
+.project-preview-checklist{padding:0;list-style:none}
+.project-preview-checklist li{display:flex;align-items:center;gap:10px;margin:8px 0}
+.project-preview-checklist input{min-height:16px;width:16px;accent-color:#0069C8}
+.project-preview-deliverables{display:grid;gap:8px;margin:18px 0}
+.project-preview-deliverable{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.project-preview-activity{list-style:none;padding:0}
+.project-preview-activity li{padding:12px 0;border-bottom:1px solid #E3EAF2;display:flex;gap:12px;flex-wrap:wrap}
+.project-preview-activity small{margin-left:auto;color:#61748A}
+@media(max-width:760px){
+ .project-preview-workspace{padding-inline:14px}
+ .project-preview-workspace .project-heading{flex-wrap:wrap}
+ .project-preview-workspace .project-filters{display:flex;gap:10px;flex-wrap:wrap}
+ .project-preview-workspace .project-filters label{flex:1 1 160px}
+ .project-preview-workspace .project-v2-overview-grid{grid-template-columns:1fr}
+ .project-preview-workspace .project-v2 .project-summary{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
