@@ -1,0 +1,254 @@
+/* Local-only bridge for migrated operations components.
+ * Do not copy legacy operations.css global body/header/form resets here. */
+.ops-preview-root{color:#00255A;font:400 14px/1.5 Inter,Arial,sans-serif;min-width:0}
+.ops-preview-root *{box-sizing:border-box}
+.ops-preview-root h1,.ops-preview-root h2,.ops-preview-root h3{color:#00255A}
+.ops-preview-root button,.ops-preview-root input,
+.ops-preview-root select,.ops-preview-root textarea{font:inherit;max-width:100%}
+.ops-preview-root button:not([disabled]){cursor:pointer}
+.ops-preview-root button:disabled{opacity:.5;cursor:not-allowed}
+.ops-preview-root :is(button,input,select,textarea,a):focus-visible{
+ outline:3px solid #50C0E8;outline-offset:2px
+}
+.ops-preview-root :is(input:not([type="checkbox"]):not([type="radio"]),select,textarea){
+ display:block;min-height:44px;max-width:100%;width:100%;padding:10px 12px;
+ border:1px solid #B9C9D9;border-radius:8px;background:#fff;color:#00255A
+}
+.ops-preview-root input[type="checkbox"],.ops-preview-root input[type="radio"]{
+ width:18px;height:18px;accent-color:#0069C8;flex:none
+}
+.ops-preview-root label{display:grid;gap:8px;font-size:13px;font-weight:600;min-width:0}
+.ops-preview-root p{line-height:1.6}
+.ops-preview-caption{font-size:12px;color:#566B84;border-left:3px solid #50C0E8;
+ padding:9px 13px;background:#EAF5FD;margin:14px 0 22px}
+.ops-preview-root .people-shell{padding-top:10px}
+.ops-preview-root .people-metrics{margin-bottom:20px}
+.ops-preview-root .people-table td small,.ops-table td small{
+ display:block;color:#61748A;font-size:11px;margin-top:5px;overflow-wrap:anywhere
+}
+.ops-preview-root .people-table-wrap{overflow:auto}
+.ops-preview-root .people-form-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.ops-preview-root .people-form-grid label{display:grid;gap:7px}
+.ops-department-chart{display:grid;gap:14px}
+.ops-dept-row{display:grid;grid-template-columns:minmax(120px,190px) minmax(60px,1fr) 24px;
+ gap:12px;align-items:center;font-size:13px}
+.ops-dept-row>span{overflow-wrap:anywhere}
+.ops-dept-track{height:12px;background:#E6EDF5;border-radius:99px;overflow:hidden}
+.ops-dept-track>span{display:block;background:#0069C8;border-radius:99px;height:100%}
+.ops-dept-row strong{text-align:right}
+.ops-empty{padding:30px;color:#61748A;text-align:center}
+.ops-title-row{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap;
+ margin:0 0 22px}
+.ops-title-row h1{font-size:clamp(28px,3.5vw,42px);letter-spacing:-.04em;margin:4px 0}
+.ops-title-row p:not(.utility-eyebrow){color:#62758D}
+.ops-head-actions,.ops-headline{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.ops-headline{justify-content:space-between;margin-bottom:14px}
+.ops-headline h2,.ops-headline h3{margin:0}
+.ops-headline p{margin:4px 0}
+.ops-head-actions button,.ops-admin-root button,.ops-project-page button,
+.ops-page-controls button,.ops-accounts-nav button{
+ display:inline-flex;justify-content:center;align-items:center;min-height:42px;
+ background:#fff;border:1px solid #B9C9D9;border-radius:8px;
+ padding:9px 14px;color:#00255A;font-weight:600
+}
+.ops-project-page{max-width:1400px;margin:auto;padding:24px clamp(12px,3vw,44px) 64px}
+.ops-panel,.ops-admin-panel{background:#fff;border:1px solid #DDE5EF;border-radius:12px;
+ padding:24px;margin-bottom:16px}
+.ops-panel h2,.ops-admin-panel h2{font-size:22px;margin:0 0 14px}
+.ops-panel h3,.ops-admin-panel h3{font-size:17px;margin:16px 0 8px}
+.ops-panel p,.ops-admin-panel p{color:#566C84}
+.ops-org-controls{display:grid;grid-template-columns:minmax(180px,1fr) minmax(180px,1fr) auto;
+ gap:16px;align-items:end}
+.ops-page-controls{display:flex;align-items:center;flex-wrap:wrap;gap:10px}
+.ops-page-controls span{font-size:12px;color:#61748A}
+.ops-org-row{display:grid!important;grid-template-columns:1fr auto;align-items:center;
+ width:100%;text-align:left;background:white!important;border:0!important;
+ border-bottom:1px solid #E2EAF3!important;border-radius:0!important;
+ min-height:68px!important;gap:7px;padding:12px!important}
+.ops-org-row strong{font-size:16px}
+.ops-org-row span,.ops-org-row small{font-size:12px;color:#5E7288}
+.ops-org-row small{grid-column:1/-1}
+.ops-tabs{display:flex;flex-wrap:wrap;gap:5px;border-bottom:1px solid #DCE5EF;margin:12px 0 20px}
+.ops-tabs button{min-height:40px;border:0;border-bottom:2px solid transparent;
+ border-radius:0;background:transparent;color:#61748A;font-size:13px;font-weight:650;padding:9px 14px}
+.ops-tabs button[aria-current="page"],.ops-tabs button[aria-pressed="true"]{
+ color:#0069C8;border-bottom-color:#0069C8;background:#F4F9FF
+}
+.ops-form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;
+ margin:16px 0}
+.ops-project-page .ops-form-grid>div{min-width:0}
+.ops-table-scroll{overflow:auto;max-width:100%}
+.ops-table{border-collapse:collapse;width:100%;min-width:620px;font-size:13px}
+.ops-table th,.ops-table td{text-align:left;padding:13px 12px;border-bottom:1px solid #E1E9F2;
+ vertical-align:top}
+.ops-table th{font-weight:650;font-size:11px;text-transform:uppercase;letter-spacing:.07em;color:#5B7189}
+.ops-table td{overflow-wrap:anywhere}
+.ops-table td button{padding:8px 11px;font-size:11px}
+.ops-muted-actions{margin:18px 0}
+.ops-list-line{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;
+ gap:14px;border-bottom:1px solid #E1E9F2;padding:13px 0}
+.ops-list-line span{color:#64778F}
+.ops-history{list-style:none;padding:0;margin:14px 0}
+.ops-history li{display:flex;align-items:flex-start;gap:10px;flex-wrap:wrap;
+ padding:14px 0;border-bottom:1px solid #E1E9F2}
+.ops-history li span{color:#536984}
+.ops-history li small{color:#8797AA;margin-left:auto}
+.ops-step-row{display:flex;flex-wrap:wrap;gap:8px;margin:18px 0 22px}
+.ops-step-row button{min-height:44px;background:#fff;border:1px solid #DCE5EF;
+ border-radius:8px;color:#536984;padding:10px 14px}
+.ops-step-row button.ops-step-current{background:#00255A;border-color:#00255A;color:#fff}
+.ops-admin-root{max-width:1460px;margin:auto;padding:24px clamp(12px,3vw,44px) 64px}
+.ops-admin-root .ops-tabs{margin:22px 0}
+.ops-admin-root .ops-tabs button{font-size:12px}
+.ops-admin-panel{padding:clamp(18px,3vw,28px)}
+.ops-admin-banner{display:flex;justify-content:space-between;gap:20px;align-items:center}
+.ops-admin-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
+ gap:12px;margin:16px 0}
+.ops-admin-stat{padding:17px;background:#FBFCFE;border:1px solid #E1E6EF;
+ border-radius:12px;color:#536984;font-size:12px}
+.ops-admin-stat strong{display:block;color:#00255A;font-size:27px;margin-top:8px}
+.ops-admin-root button:not([disabled]):hover,.ops-project-page button:not([disabled]):hover{
+ background:#EAF3FD}
+.ops-detail-card{background:#F6F9FD;border:1px solid #DCE5EF;border-radius:9px;
+ padding:18px;margin:14px 0}
+.ops-detail-card button{margin:5px}
+.ops-preview-root .hr-page{max-width:1390px}
+.ops-preview-root .hr-grid{margin-top:18px}
+.ops-preview-root .hr-page .hr-actions button{min-width:100px}
+.ops-report-filters{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;
+ margin:18px 0}
+.ops-report-filters>button{align-self:end}
+.ops-inline-check{display:flex!important;align-items:center;gap:10px;font-size:13px;
+ font-weight:500}
+.ops-pref-list{border:1px solid #DCE5EF;border-radius:9px;padding:16px;margin:16px 0}
+.ops-pref-list .ops-inline-check{margin:10px 0}
+.ops-preview-root .account-page{max-width:1100px}
+.ops-preview-root .account-page nav button{
+ border:0;border-bottom:2px solid transparent;background:transparent;
+ border-radius:0;min-height:44px;color:#0069C8;padding:8px 12px;font-weight:650
+}
+.ops-preview-root .account-page nav button[aria-current="page"]{border-color:#0069C8}
+.ops-preview-root #profileForm button:disabled{opacity:.5;cursor:not-allowed}
+.ops-preview-root .finance-grid .ops-form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}
+.ops-preview-root .finance-grid .finance-panel{margin:0}
+.ops-preview-root .finance-panel button:disabled{opacity:.5;cursor:not-allowed}
+.ops-preview-root .journal-filters{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px}
+.ops-preview-root .journal-filters label{margin:0}
+.ops-preview-root .finance-scroll table{width:100%}
+.ops-preview-root .finance-scroll td small{display:block;color:#61748A;margin-top:5px}
+.ops-preview-root .project-workspace .project-panel .ops-report-filters{display:grid}
+[data-development-preview] .portal-preview-link,
+[data-development-preview] .portal-preview-brand,[data-development-preview] .portal-preview-icon{
+ background:transparent;border:0;cursor:pointer;font:inherit
+}
+[data-development-preview] .portal-preview-link{
+ display:block;text-align:left;width:100%;border-radius:0;padding:10px 13px;
+ color:inherit;min-height:36px
+}
+[data-development-preview] .portal-preview-link:hover{background:#EEF5FD;color:#00255A}
+[data-development-preview] .portal-preview-link:focus-visible{outline:3px solid #0069C8;outline-offset:-3px}
+[data-development-preview] .portal-preview-brand{display:inline-flex;align-items:center;
+ gap:8px;color:inherit;white-space:normal;text-align:left;padding:0}
+[data-development-preview] .portal-preview-icon{display:inline-grid;place-items:center;
+ min-width:40px;min-height:40px}
+[data-development-preview] .workspace-preview-toolbar{position:relative;z-index:3}
+[data-development-preview] .workspace-preview-controls>select#previewScreen{max-width:min(100%,250px)}
+@media(max-width:850px){
+ .ops-org-controls{grid-template-columns:1fr}
+ .ops-preview-root .finance-grid,.ops-preview-root .people-form-grid{grid-template-columns:1fr}
+ .ops-preview-root .finance-stats{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .ops-report-filters,.ops-preview-root .journal-filters{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .ops-preview-root .hr-grid{grid-template-columns:1fr}
+}
+@media(max-width:600px){
+ .ops-panel,.ops-admin-panel{padding:16px}
+ .ops-preview-root .account-grid{grid-template-columns:1fr}
+ .ops-form-grid,.ops-report-filters,.ops-preview-root .journal-filters{grid-template-columns:1fr}
+ .ops-admin-stats{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .ops-preview-root .finance-stats{grid-template-columns:1fr}
+ .ops-dept-row{grid-template-columns:minmax(95px,128px) 1fr 18px;gap:8px}
+ .ops-title-row{display:block}
+ .ops-title-row h1{font-size:28px}
+ .ops-admin-banner{display:block}
+ .ops-preview-root .finance-grid .ops-form-grid{grid-template-columns:1fr}
+}
+
+/* SSO/identity/outreach previews use scoped adaptations of the archived styles.
+ * The originals have global :root/header/button resets and must not be imported. */
+.ops-access-shell{width:min(1120px,100%);margin:auto;padding:32px 24px}
+.ops-access-shell .ops-panel{margin-bottom:18px}
+.ops-access-shell .ops-panel button{display:inline-flex;min-height:44px;align-items:center;
+ background:#fff;border:1px solid #B9C9D9;border-radius:8px;padding:10px 14px;color:#00255A}
+.ops-access-shell h2{font-size:19px;margin:0 0 18px}
+.ops-music-launch{min-height:calc(100dvh - 320px);display:flex;align-items:center;
+ justify-content:center;padding:30px}
+.ops-music-card{width:min(490px,100%);border:1px solid #DBE5EF;border-radius:14px;
+ background:#fff;padding:clamp(24px,5vw,44px)}
+.ops-music-card h1{font-size:clamp(30px,5vw,40px);letter-spacing:-.04em;
+ margin:0 0 15px}
+.ops-music-lead,.ops-music-caption{font-size:13px;line-height:1.65;color:#53677F}
+.ops-music-lead{margin:0 0 20px}
+.ops-music-card button{display:block;width:100%;min-height:48px;background:#0069C8;
+ border:0;color:white;border-radius:8px;margin-top:18px}
+.ops-music-card button:disabled{opacity:.55;cursor:not-allowed}
+.ops-music-caption{margin-top:15px}
+.ops-preview-root .identity-dashboard-hero{display:flex;align-items:center;gap:16px;
+ background:#fff;border:1px solid #DDE5EF;border-radius:12px;padding:24px}
+.ops-preview-root .identity-dashboard-hero h2{margin:0 0 5px}
+.ops-preview-root .identity-avatar{display:grid;place-items:center;width:56px;height:56px;
+ border-radius:50%;background:#00255A;color:white;flex:none}
+.ops-preview-root .identity-readiness{padding:22px;border:1px solid #DDE5EF;border-radius:12px}
+@media(max-width:600px){
+ .ops-access-shell{padding:18px 14px}
+ .ops-music-launch{padding:12px}
+ .ops-preview-root .identity-dashboard-hero{padding:16px}
+}
+
+[data-development-preview] .portal-preview-search{border:0;background:transparent;
+ padding:9px 12px;text-align:left;color:#536984;min-height:40px;cursor:pointer;width:100%}
+[data-development-preview] .portal-preview-search:hover{color:#0069C8}
+
+/* UI polish: preview's top-level navigation must not inherit dropdown width.
+ * Preserve the original two-row VSPH navigation on desktop. */
+[data-development-preview] .portal-navigation > .portal-preview-link {
+ display:inline-flex;align-items:center;flex:0 0 auto;width:auto;min-height:44px;
+ padding:12px 16px;border-radius:6px;color:#D9E7F5;
+ font:500 14px/20px Inter,Arial,sans-serif;white-space:nowrap
+}
+[data-development-preview] .portal-navigation > .portal-preview-link:hover,
+[data-development-preview] .portal-navigation > .portal-preview-link.is-active {
+ background:#0069C8;color:white
+}
+[data-development-preview] .portal-dropdown > .portal-preview-link.is-active {
+ background:#EAF3FA;color:#00255A
+}
+@media(max-width:950px){
+ [data-development-preview] .portal-navigation > .portal-preview-link {
+  width:100%;justify-content:flex-start
+ }
+}
+@media(max-width:600px){
+ /* Keep administration tabs in one scrollable row instead of a tall stack. */
+ .ops-preview-root .ops-tabs {
+  flex-wrap:nowrap;overflow-x:auto;max-width:100%;overscroll-behavior-x:contain;
+  scrollbar-width:thin
+ }
+ .ops-preview-root .ops-tabs > button {flex:0 0 auto;white-space:nowrap}
+ .ops-preview-root .ops-history li small {margin-left:0}
+ .ops-preview-root .ops-page-controls {justify-content:space-between}
+}
+
+/* Small-screen employee identity: long synthetic emails must not expand the page. */
+[data-development-preview] .identity-dashboard-hero > div:last-child {
+ min-width:0;overflow-wrap:anywhere
+}
+[data-development-preview] .identity-dashboard-hero p {
+ overflow-wrap:anywhere;word-break:break-word
+}
+[data-development-preview] .identity-actions {
+ display:flex;flex-wrap:wrap;gap:10px
+}
+@media(max-width:360px){
+ [data-development-preview] .identity-dashboard-hero{flex-wrap:wrap}
+ [data-development-preview] .identity-dashboard-hero > div:last-child{flex:1 1 100%}
+}

@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import type { HrAccess, PortalUser } from './contracts';
 
 const activePages = new Set(['/dashboard', '/applications', '/projects']);
@@ -14,9 +14,18 @@ function Icon({ name }: { name: string }) {
   return <svg className="icon" aria-hidden="true"><use href={'/portal-icons.svg#icon-' + name} /></svg>;
 }
 
-function NavItemLink({ label, href, onActivate, pathname, previewMode }: NavItem & {
+function NavItemLink({ label, href, onActivate, pathname, previewMode,
+  onPreviewNavigate, canPreviewNavigate }: NavItem & {
   onActivate: () => void; pathname: string; previewMode: boolean;
+  onPreviewNavigate?: (href: string) => void;
+  canPreviewNavigate?: (href: string) => boolean;
 }) {
+  if (previewMode && onPreviewNavigate && canPreviewNavigate?.(href) !== false) {
+    return <button type="button" className={'portal-link portal-preview-link' +
+      (pathname === href ? ' is-active' : '')}
+      aria-current={pathname === href ? 'page' : undefined}
+      onClick={() => { onPreviewNavigate(href); onActivate(); }}>{label}</button>;
+  }
   if (previewMode || !activePages.has(href)) {
     // Do not provide a working link to a not-yet-ported protected page.
     return <span className="portal-link portal-pending" aria-disabled="true" title="Page migration pending">{label}</span>;
@@ -26,13 +35,20 @@ function NavItemLink({ label, href, onActivate, pathname, previewMode }: NavItem
     href={href} onClick={onActivate}>{label}</Link>;
 }
 
-export function WorkspaceHeader({ user, flags, accessFailed, previewMode = false }: {
+export function WorkspaceHeader({ user, flags, accessFailed, previewMode = false,
+  onPreviewNavigate, canPreviewNavigate, previewActiveHref }: {
   user: PortalUser;
   flags: HrAccess | null;
   accessFailed: boolean;
   previewMode?: boolean;
+  onPreviewNavigate?: (href: string) => void;
+  canPreviewNavigate?: (href: string) => boolean;
+  previewActiveHref?: string;
 }) {
   const pathname = usePathname();
+  const activePath = previewMode ? previewActiveHref ?? '' : pathname;
+  const navigationRef = useRef<HTMLElement>(null);
+  const accountRef = useRef<HTMLDetailsElement>(null);
   const [menuOpen, setMenuOpen] = useState(false);
   const [logoutBusy, setLogoutBusy] = useState(false);
   const [feedback, setFeedback] = useState(accessFailed ?
@@ -74,6 +90,7 @@ export function WorkspaceHeader({ user, flags, accessFailed, previewMode = false
       { label: 'Provisioning recovery', href: '/admin/provisioning' },
       { label: 'Finance', href: '/admin/finance' },
       { label: 'Finance journal', href: '/admin/finance/journal' },
+      { label: 'Outreach access', href: '/admin/outreach-access' },
       { label: 'Audit logs', href: '/admin?tab=audit&view=removals' },
     ] },
   ];
@@ -96,7 +113,15 @@ export function WorkspaceHeader({ user, flags, accessFailed, previewMode = false
     }
   }
 
-  const closeMenu = () => setMenuOpen(false);
+  const closeMenu = () => {
+    setMenuOpen(false);
+    navigationRef.current?.querySelectorAll('details').forEach(item => { item.open = false; });
+  };
+  const previewAccount = (href: string) => {
+    onPreviewNavigate?.(href);
+    if (accountRef.current) accountRef.current.open = false;
+    closeMenu();
+  };
   return (
     <header className="workspace-topbar crm-topbar">
       <div className="crm-header-row">
@@ -106,24 +131,38 @@ export function WorkspaceHeader({ user, flags, accessFailed, previewMode = false
             aria-expanded={menuOpen} aria-controls="workspaceNavigation"
             onClick={() => setMenuOpen(!menuOpen)}><Icon name="menu" /></button>
           {previewMode
-            ? <span className="crm-brand">VSPH<span>CONTROL CENTER</span></span>
+            ? <button type="button" className="crm-brand portal-preview-brand"
+                onClick={() => { onPreviewNavigate?.('/dashboard'); closeMenu(); }}>VSPH<span>CONTROL CENTER</span></button>
             : <Link className="crm-brand" href="/dashboard">VSPH<span>CONTROL CENTER</span></Link>}
         </div>
         <div className="crm-global-search" role="search" aria-label="Workspace search">
           <Icon name="search" />
-          <input aria-label="Search work" placeholder="Search work" disabled
-            title="Search is unavailable until the secured search route is migrated" />
-          <button type="button" disabled>Search</button>
+          {previewMode
+            ? <button type="button" className="portal-preview-search"
+                onClick={() => onPreviewNavigate?.('/search')}>Search project work</button>
+            : <>
+                <input aria-label="Search work" placeholder="Search work" disabled
+                  title="Search is unavailable until the secured search route is migrated" />
+                <button type="button" disabled>Search</button>
+              </>}
         </div>
         <div className="crm-header-actions">
           {previewMode
-            ? <span className="crm-header-icon" aria-label="Application launcher is not connected">
+            ? <button type="button" className="crm-header-icon portal-preview-icon"
+                aria-label="Preview application launcher"
+                onClick={() => onPreviewNavigate?.('/applications')}>
                 <Icon name="apps" />
-              </span>
+              </button>
             : <Link className="crm-header-icon" href="/applications" aria-label="Open application launcher">
                 <Icon name="apps" />
               </Link>}
-          <details className="portal-disclosure portal-account">
+          <details ref={accountRef} className="portal-disclosure portal-account"
+            onKeyDown={event => {
+              if (event.key === 'Escape') {
+                if (accountRef.current) accountRef.current.open = false;
+                event.stopPropagation();
+              }
+            }}>
             <summary aria-label="Account menu">
               <span className="crm-header-avatar-wrap"><span className="crm-header-avatar" id="avatar">
                 {initial}
@@ -136,8 +175,17 @@ export function WorkspaceHeader({ user, flags, accessFailed, previewMode = false
                 <strong id="sideName">{user.name}</strong>
                 <small id="sideRole">{isOwner ? 'Platform owner' : 'Workspace member'}</small>
               </div>
-              <span className="portal-link portal-pending" aria-disabled="true">Your profile</span>
-              <span className="portal-link portal-pending" aria-disabled="true">Security &amp; sessions</span>
+              {previewMode
+                ? <>
+                    <button type="button" className="portal-link portal-preview-link"
+                      onClick={() => previewAccount('/account/profile')}>Your profile</button>
+                    <button type="button" className="portal-link portal-preview-link"
+                      onClick={() => previewAccount('/account/security')}>Security &amp; sessions</button>
+                  </>
+                : <>
+                    <span className="portal-link portal-pending" aria-disabled="true">Your profile</span>
+                    <span className="portal-link portal-pending" aria-disabled="true">Security &amp; sessions</span>
+                  </>}
               {previewMode
                 ? <span className="portal-link portal-pending" aria-disabled="true">Sign out unavailable in preview</span>
                 : <button id="logoutButton" type="button" className="portal-link portal-signout"
@@ -146,24 +194,29 @@ export function WorkspaceHeader({ user, flags, accessFailed, previewMode = false
           </details>
         </div>
       </div>
-      <nav id="workspaceNavigation" className="portal-navigation" aria-label="Main"
-        data-mobile-open={menuOpen} onKeyDown={(e) => {
-          if (e.key === 'Escape') { e.currentTarget.querySelectorAll('details').forEach((d) => {d.open = false;});closeMenu(); }
+      <nav ref={navigationRef} id="workspaceNavigation" className="portal-navigation" aria-label="Main"
+        data-mobile-open={menuOpen} onKeyDown={(event) => {
+          if (event.key === 'Escape') closeMenu();
         }}>
         {previewMode
-          ? <span className="portal-link is-active" aria-current="page">Overview</span>
+          ? <button type="button" className={'portal-link portal-preview-link' +
+                (activePath === '/dashboard' ? ' is-active' : '')}
+              aria-current={activePath === '/dashboard' ? 'page' : undefined}
+              onClick={() => { onPreviewNavigate?.('/dashboard'); closeMenu(); }}>Overview</button>
           : <Link className={'portal-link' + (pathname === '/dashboard' ? ' is-active' : '')}
               aria-current={pathname === '/dashboard' ? 'page' : undefined}
               href="/dashboard" onClick={closeMenu}>Overview</Link>}
         {groups.filter(group => group.show !== false).map(group => {
-          const hasActive = group.items.some(item => item.href === pathname);
+          const hasActive = group.items.some(item => item.href === activePath);
           return (
             <details className={'portal-disclosure' + (hasActive ? ' has-active-page' : '')}
               key={group.label}>
               <summary>{group.label}<span aria-hidden="true" className="nav-chevron" /></summary>
               <div className="portal-dropdown">
                 {group.items.filter(item => item.show !== false).map(item =>
-                  <NavItemLink key={item.label} {...item} pathname={pathname} previewMode={previewMode} onActivate={closeMenu} />
+                  <NavItemLink key={item.label} {...item} pathname={activePath} previewMode={previewMode}
+                    onPreviewNavigate={onPreviewNavigate}
+                    canPreviewNavigate={canPreviewNavigate} onActivate={closeMenu} />
                 )}
               </div>
             </details>

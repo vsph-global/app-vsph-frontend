@@ -41,7 +41,7 @@ test('preview uses only synthetic UI fixtures with no credentials or backend API
   }
   assert.match(preview, /<WorkspaceHeader[^>]*previewMode/);
   assert.match(preview, /<DashboardSummary[\s\S]*previewMode/);
-  assert.match(preview, /<ApplicationsLibrary apps=\{fixtures\} previewMode/);
+  assert.match(preview, /<ApplicationsLibrary apps=\{roleApps\} previewMode/);
   assert.doesNotMatch(preview, /fetch\(|localStorage|sessionStorage|\/api\/|document\.cookie/);
   const header = await read('src/features/workspace/WorkspaceHeader.tsx');
   assert.match(header, /if \(logoutBusy \|\| previewMode\) return/);

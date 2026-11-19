@@ -1,0 +1,308 @@
+(() => {
+ 'use strict';
+ const $=id=>document.getElementById(id);
+ const label={full_time:'Full-time',part_time:'Part-time',intern:'Intern',contract:'Contract',
+  onboarding:'Onboarding',active:'Active',on_leave:'On leave',inactive:'Inactive'};
+ let current=null,selected=null,removing=null,cursor=null,lastCursor=null,busy=false,searchVersion=0,successNotice='';
+ const entry=new URLSearchParams(location.search);let requestedEditId=entry.get('edit');let requestedRestoreId=entry.get('restore'),restoring=null;
+ const text=(tag,value,cls='')=>{const el=document.createElement(tag);el.textContent=String(value??'');if(cls)el.className=cls;return el;};
+ const info=message=>{$('peopleMessage').textContent=message;};
+ async function api(path,body=null,extra={}){
+  const response=await fetch('/api/employees'+path,{
+   credentials:'same-origin',cache:'no-store',
+   ...(body?{method:'POST',headers:{'Content-Type':'application/json',...extra},body:JSON.stringify(body)}:{})
+  });
+  if(response.status===401){location.assign('/login');throw Error('Your session expired.');}
+  const result=await response.json().catch(()=>({}));
+  if(!response.ok)throw Error(result.code==='SCHEMA_NOT_READY'?'The employee migration has not been installed on this database.':result.message||'Employee operation was denied. Reload and retry.');
+  return result;
+ }
+ function drawStats(stats){
+  const ids={staffTotal:'total',staffActive:'active',staffOnboarding:'onboarding',staffLeave:'onLeave',staffHr:'hrManagers'};
+  for(const [id,key] of Object.entries(ids))$(id).textContent=Number(stats[key]||0).toLocaleString('en-IN');
+ }
+ function drawDepartments(items){
+  const parent=$('departmentChart');parent.replaceChildren();
+  if(!items.length){parent.append(text('p','No active team assignments in the roster yet.','muted'));return;}
+  const highest=Math.max(1,...items.map(d=>Number(d.members)||0));
+  for(const department of items){
+   const row=text('div','','people-dept-row'),title=text('strong',department.department),
+    track=text('span','','people-dept-track'),bar=text('span','','people-dept-fill'),
+    count=text('span',department.members,'people-dept-count');
+   const percent=Math.max(0,Math.min(100,(Number(department.members)||0)/highest*100));
+   bar.style.width=percent.toFixed(1)+'%';
+   track.append(bar);row.append(title,track,count);parent.append(row);
+  }
+ }
+ function makeButton(value,callback){
+  const b=text('button',value,'people-secondary');b.type='button';b.addEventListener('click',callback);return b;
+ }
+ function edit(employee){
+  selected=employee;
+  const form=$('employeeEditForm');
+  form.elements.fullName.value=employee.full_name;
+  const departmentField=form.elements.department;
+  departmentField.querySelector('option[data-legacy-department]')?.remove();
+  if(![...departmentField.options].some(option=>option.value===employee.department&&option.value)){
+   // Legacy values stay unchanged until an authorized employee edit explicitly reassigns them.
+   const legacy=document.createElement('option');
+   legacy.value='';
+   legacy.textContent='Current: '+employee.department+' (select an approved department)';
+   legacy.disabled=true;
+   legacy.dataset.legacyDepartment='true';
+   departmentField.insertBefore(legacy,departmentField.firstChild);
+   departmentField.value='';
+  }else departmentField.value=employee.department;
+  form.elements.jobTitle.value=employee.job_title;
+  form.elements.employmentType.value=employee.employment_type;
+  form.elements.startDate.value=employee.start_date;
+  form.elements.status.value=employee.status;
+  form.elements.confirmed.checked=false;
+  $('editEmail').textContent=employee.email+' · version '+employee.version;
+  $('employeeEditPanel').hidden=false;
+  $('employeeEditPanel').scrollIntoView({block:'nearest',behavior:'auto'});
+  form.elements.fullName.focus();
+ }
+ function beginRemoval(employee){
+  removing=employee;
+  $('removeEmployeeIdentity').textContent=employee.full_name+' · '+employee.email;
+  $('employeeRemoveForm').reset();
+  $('employeeRemovePanel').hidden=false;
+  $('employeeRemovePanel').scrollIntoView({block:'nearest',behavior:'auto'});
+  $('employeeRemovalReason').focus();
+ }
+ async function changeHR(employee,action){
+  const question=action==='grant_hr'
+   ?'Grant HR employee-management authority to '+employee.email+'? An active matching ordinary portal account and an accepted employee link are required.'
+   :'Revoke HR employee-management authority from '+employee.email+'?';
+  if(!await VSPHUI.confirm(question,{title:action==='grant_hr'?'Grant HR access?':'Revoke HR access?',confirmLabel:action==='grant_hr'?'Grant access':'Revoke access',danger:action!=='grant_hr'}))return;
+  await run(async()=>{
+   await api('/'+employee.id+'/'+action,{version:employee.version,confirmed:true});
+   successNotice='HR permission updated.';await load(cursor);
+  });
+ }
+ let activeManage=null;
+ function closeManage(restore=false){
+  if(!activeManage)return;
+  const {menu,trigger}=activeManage;
+  activeManage=null;menu.remove();trigger.setAttribute('aria-expanded','false');
+  if(restore&&trigger.isConnected)trigger.focus();
+ }
+ function openManage(trigger,employee,role){
+  if(activeManage?.trigger===trigger){closeManage(true);return;}
+  closeManage();
+  const menu=text('div','','people-manage-menu');menu.setAttribute('role','menu');
+  menu.setAttribute('aria-label','Manage '+employee.full_name);
+  const add=(label,fn,{danger=false,link=false}={})=>{
+   const item=link?text('a',label):text('button',label);
+   if(!link)item.type='button';
+   item.setAttribute('role','menuitem');
+   if(danger)item.classList.add('people-manage-danger');
+   if(link)item.href=fn;
+   else item.addEventListener('click',()=>{closeManage();fn();});
+   if(link)item.addEventListener('click',()=>closeManage());
+   menu.append(item);
+  };
+  add('Edit employee',()=>edit(employee));
+  add(role==='owner'&&!employee.is_hr?'Review HR access':'Account & access','/employees/'+encodeURIComponent(employee.id)+'/account-link',{link:true});
+  if(role==='owner'&&employee.is_hr)add('Revoke HR authority',()=>changeHR(employee,'revoke_hr'),{danger:true});
+  if(!employee.is_owner){
+   const divider=text('div','','people-manage-divider');divider.setAttribute('role','separator');menu.append(divider);
+   add('Remove employee',()=>beginRemoval(employee),{danger:true});
+  }
+  document.body.append(menu);
+  trigger.setAttribute('aria-expanded','true');
+  activeManage={menu,trigger};
+  const place=()=>{
+   if(!activeManage||activeManage.menu!==menu)return;
+   const rect=trigger.getBoundingClientRect(),width=menu.offsetWidth,height=menu.offsetHeight;
+   menu.style.left=Math.max(12,Math.min(window.innerWidth-width-12,rect.right-width))+'px';
+   const below=rect.bottom+6,above=rect.top-height-6;
+   menu.style.top=(below+height<=window.innerHeight-12||above<12?Math.min(below,window.innerHeight-height-12):above)+'px';
+  };
+  place();menu.querySelector('[role=menuitem]')?.focus();
+ }
+ document.addEventListener('click',event=>{
+  if(activeManage&&!activeManage.menu.contains(event.target)&&!activeManage.trigger.contains(event.target))closeManage();
+ });
+ document.addEventListener('keydown',event=>{
+  if(!activeManage)return;
+  if(event.key==='Escape'){event.preventDefault();closeManage(true);return;}
+  if(!['ArrowDown','ArrowUp','Home','End'].includes(event.key))return;
+  const links=[...activeManage.menu.querySelectorAll('[role=menuitem]')];if(!links.length)return;
+  event.preventDefault();
+  const index=links.indexOf(document.activeElement);
+  const next=event.key==='Home'?0:event.key==='End'?links.length-1:event.key==='ArrowDown'?(index+1)%links.length:(index-1+links.length)%links.length;
+  links[next].focus();
+ });
+ // The floating menu remains stable while a keyboard or automation client scrolls a menuitem into view.
+ window.addEventListener('resize',()=>closeManage());
+ function drawEmployees(records,role){
+  const parent=$('employeeRows');parent.replaceChildren();
+  const hasMore=records.length>50,items=records.slice(0,50);
+  lastCursor=hasMore&&items.length?items[items.length-1].id:null;
+  $('nextEmployeePage').disabled=!hasMore;
+  $('employeePageSummary').textContent=(items.length?'Showing '+items.length:'No')+' employees on this page'+(hasMore?' · more available':'');
+  if(!items.length){const tr=document.createElement('tr'),td=text('td','No employees match these filters.');td.colSpan=6;tr.append(td);parent.append(tr);return;}
+  for(const employee of items){
+   const row=document.createElement('tr'),name=document.createElement('td');
+   name.append(text('strong',employee.full_name),text('small',employee.email));
+   const position=document.createElement('td');position.append(text('strong',employee.department),text('small',employee.job_title));
+   const type=text('td',label[employee.employment_type]||employee.employment_type);
+   const status=document.createElement('td'),pill=text('span',label[employee.status]||employee.status,'people-status');pill.dataset.state=employee.status;status.append(pill);
+   const access=text('td',employee.is_hr?'HR manager':'No HR authority');
+   const actions=document.createElement('td'),group=text('div','','people-actions');actions.append(group);
+   const canEdit=role==='owner'||!employee.is_hr;
+   if(canEdit){
+    const trigger=makeButton('Manage',()=>openManage(trigger,employee,role));
+    trigger.className='people-manage-trigger';trigger.setAttribute('aria-haspopup','menu');
+    trigger.setAttribute('aria-expanded','false');trigger.setAttribute('aria-label','Manage '+employee.full_name);
+    group.append(trigger);
+   }else actions.append(text('span','Owner managed','muted'));
+   row.append(name,position,type,status,access,actions);parent.append(row);
+  }
+ }
+ async function load(afterId=null){
+  const currentLoad=++searchVersion;
+  const query=new URLSearchParams();
+  if(afterId)query.set('afterId',afterId);
+  const term=$('employeeSearch').value.trim(),status=$('employeeStatus').value;
+  if(term)query.set('search',term);
+  if(status!=='all')query.set('status',status);
+  $('employeeRows').setAttribute('aria-busy','true');
+  try{
+   const result=await api('/'+(query.toString()?'?'+query:''));
+   if(currentLoad!==searchVersion)return;
+   current=result;cursor=afterId;
+   drawStats(result.counts);drawDepartments(result.departments||[]);
+   drawEmployees(result.employees||[],result.role);
+    $('archivedEmployeesShortcut').hidden=result.role!=='owner';
+    if(requestedRestoreId && result.role==='owner'){
+      const id=requestedRestoreId;requestedRestoreId=null;
+      void openArchived(id);
+    }
+   if(requestedEditId){
+    const match=(result.employees||[]).find(employee=>employee.id===requestedEditId);
+    if(match){
+     requestedEditId=null;
+     if(result.role==='owner'||!match.is_hr)edit(match);
+    }
+   }
+   const done=successNotice;successNotice='';info(done||'Showing current records from the employee database.');if(done)VSPHUI.toast(done);
+  }catch(error){if(currentLoad===searchVersion){info(error.message);$('employeeRows').replaceChildren();$('employeeRows').append(document.createElement('tr'));$('nextEmployeePage').disabled=true;}}
+  finally{if(currentLoad===searchVersion)$('employeeRows').setAttribute('aria-busy','false');}
+ }
+ async function run(action){
+  if(busy)return;busy=true;const controls=[...document.querySelectorAll('main button')].filter(x=>!x.disabled);
+  for(const control of controls)control.disabled=true;
+  try{await action();}catch(error){successNotice='';info(error.message);VSPHUI.toast(error.message,{type:'error'});}
+  finally{busy=false;for(const control of controls)if(control.id!=='nextEmployeePage')control.disabled=false;}
+ }
+ async function openArchived(selectId=null){
+    if(current?.role!=='owner')return;
+    $('archivedEmployeePanel').hidden=false;
+    $('archivedEmployeesMessage').textContent='Loading archived records…';
+    const list=$('archivedEmployeesList');
+    list.replaceChildren();
+    try{
+      const result=await api('/archived');
+      const records=result.employees||[];
+      if(!records.length)list.append(text('p','No archived employee records.','people-small'));
+      for(const record of records){
+        const card=text('article','','people-archived-entry');
+        const person=text('div');
+        person.append(text('strong',record.full_name),text('small',record.email));
+        const meta=text('p','Removed '+new Date(record.removed_at).toLocaleDateString()+' · '+record.removal_reason,'people-small');
+        const action=makeButton('Review restoration',()=>chooseArchived(record));
+        card.append(person,meta,action);list.append(card);
+      }
+      $('archivedEmployeesMessage').textContent=records.length+' archived records (up to 100).';
+      if(selectId){
+        const target=records.find(x=>x.id===selectId);
+        if(target)chooseArchived(target);
+        else $('archivedEmployeesMessage').textContent='This archived record was not found in the latest owner review.';
+      }
+    }catch(error){$('archivedEmployeesMessage').textContent=error.message;}
+  }
+  function chooseArchived(employee){
+    restoring=employee;
+    const form=$('restoreEmployeeForm');form.hidden=false;form.reset();
+    $('employeeRestoreIdentity').textContent=employee.full_name+' · '+employee.email;
+    form.scrollIntoView({block:'nearest',behavior:'auto'});
+    $('employeeRestoreReason').focus();
+  }
+  $('archivedEmployeesShortcut').addEventListener('click',()=>void openArchived());
+  $('closeArchivedEmployees').addEventListener('click',()=>{
+    restoring=null;$('restoreEmployeeForm').hidden=true;$('archivedEmployeePanel').hidden=true;
+  });
+  $('cancelEmployeeRestore').addEventListener('click',()=>{
+    restoring=null;$('restoreEmployeeForm').hidden=true;
+  });
+  $('restoreEmployeeForm').addEventListener('submit',async event=>{
+    event.preventDefault();
+    if(!restoring||busy||!event.currentTarget.reportValidity())return;
+    const employee=restoring,reason=$('employeeRestoreReason').value.trim();
+    if(reason.length<8||reason.length>500){$('archivedEmployeesMessage').textContent='Enter a restoration reason between 8 and 500 characters.';return;}
+    const approval=await VSPHUI.confirm('Restore this archived employee to Onboarding? Identity links, manager assignments and HR authority will remain revoked.',{
+      title:'Restore '+employee.full_name+'?',confirmLabel:'Restore employee',
+      fields:[{label:'Email',value:employee.email},{label:'Reason',value:reason}]
+    });
+    if(!approval)return;
+    run(async()=>{
+      const result=await api('/'+employee.id+'/restore',{
+        version:employee.version,reason,confirmed:true
+      });
+      restoring=null;$('restoreEmployeeForm').hidden=true;
+      successNotice='Employee restored to Onboarding. New account consent and project access require explicit approval.';
+      await openArchived();
+      await load(null);
+      $('archivedEmployeesMessage').textContent=result.requiresNewConsent
+        ? 'Restored successfully. Review Account & Access to issue a fresh consent request.'
+        : 'Restored successfully.';
+    });
+  });
+  $('employeeEditForm').addEventListener('submit',async event=>{
+  event.preventDefault();
+  if(!selected||busy)return;
+  const form=$('employeeEditForm');
+  if(!form.reportValidity())return;
+  if(!await VSPHUI.confirm('Save changes to '+selected.email+'? Roster status does not automatically disable a portal login.',{title:'Save employee changes?',confirmLabel:'Save changes'}))return;
+  const body={
+   fullName:form.elements.fullName.value,department:form.elements.department.value,
+   jobTitle:form.elements.jobTitle.value,employmentType:form.elements.employmentType.value,
+   startDate:form.elements.startDate.value,status:form.elements.status.value,
+   version:selected.version,confirmed:form.elements.confirmed.checked
+  };
+  run(async()=>{
+   await api('/'+selected.id+'/update',body);
+   successNotice='Employee record updated.';selected=null;$('employeeEditPanel').hidden=true;await load(cursor);
+  });
+ });
+ $('cancelEdit').addEventListener('click',()=>{selected=null;$('employeeEditPanel').hidden=true;});
+ $('cancelRemoveEmployee').addEventListener('click',()=>{
+  removing=null;$('employeeRemovePanel').hidden=true;
+ });
+ $('employeeRemoveForm').addEventListener('submit',async event=>{
+  event.preventDefault();
+  if(!removing||busy||!event.currentTarget.reportValidity())return;
+  const employee=removing,reason=$('employeeRemovalReason').value.trim();
+  if(reason.length<8||reason.length>500){info('Provide a removal reason between 8 and 500 characters.');return;}
+  if(!await VSPHUI.confirm('This archives the workforce record and revokes employee-only access. The owner will retain an audit record.',{title:'Remove '+employee.full_name+'?',confirmLabel:'Remove employee',danger:true,fields:[{label:'Employee',value:employee.email},{label:'Reason',value:reason}]}))return;
+  run(async()=>{
+   await api('/'+employee.id+'/remove',{version:employee.version,reason,confirmed:true});
+   removing=null;$('employeeRemovePanel').hidden=true;
+   successNotice='Employee removed. The platform owner can review the audit history.';
+   await load(null);
+  });
+ });
+
+ $('refreshEmployees').addEventListener('click',()=>{successNotice='';load(cursor);});
+ $('firstEmployeePage').addEventListener('click',()=>load(null));
+ $('nextEmployeePage').addEventListener('click',()=>{if(lastCursor)load(lastCursor);});
+ let debounce;
+ $('employeeSearch').addEventListener('input',()=>{successNotice='';clearTimeout(debounce);debounce=setTimeout(()=>load(null),260);});
+ $('employeeStatus').addEventListener('change',()=>{successNotice='';load(null);});
+ const initialSearch=entry.get('search');
+ if(initialSearch)$('employeeSearch').value=initialSearch.slice(0,80);
+ load();
+})();

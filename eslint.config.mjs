@@ -12,6 +12,8 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Frozen legacy source archives are verified by byte hashes, not linted as active React.
+    "docs/reference/**",
   ]),
 ]);
 

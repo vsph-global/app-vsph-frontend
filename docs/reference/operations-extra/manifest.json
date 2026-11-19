@@ -1,0 +1,17 @@
+{
+  "frozen": "3b3a1535873aa0517aea41da32a407f3d9680547",
+  "files": {
+    "docs/reference/operations-extra/views/outreach-access.html": "8c78abe4e560137c797a4a913f09f10131c6d07a",
+    "docs/reference/operations-extra/views/employee-identity.html": "bac87824cb60d52c8e97abf9ee45c5d5a6a429fe",
+    "docs/reference/operations-extra/views/sso-launch.html": "4f57c7a802b6c367bfcfd17351e60bdb316abce0",
+    "docs/reference/operations-extra/views/search.html": "d4ded79f747da2d1988c75416150fd53200ed135",
+    "docs/reference/operations-extra/public/outreach-access.css": "020cb44a91a9ca062a414e1b4fd1d345f6cee076",
+    "docs/reference/operations-extra/public/outreach-access.js": "89cad8134b4e2cdfde9e3dc0d45b13a6165a7b73",
+    "docs/reference/operations-extra/public/employee-identity.css": "3188838a1dd3ca7882424c21803237ad3b69e8f4",
+    "docs/reference/operations-extra/public/employee-identity.js": "35d72d2be0cfdbf4bd367cdb7014fcd3139037b3",
+    "docs/reference/operations-extra/public/launch.css": "31c7b6f25fcc3a29b273100b9a0c92a2a14d75e6",
+    "docs/reference/operations-extra/public/launch.js": "081c7c1bedff30ef2797baf86f5821c2a34f43d1",
+    "docs/reference/operations-extra/public/search.css": "eb7c790c54e4ee0c2044b3c483404e98c4440ed4",
+    "docs/reference/operations-extra/public/search.js": "236c7f1c5438aaf0e859c05e14f25316d34dbc2f"
+  }
+}

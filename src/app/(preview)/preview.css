@@ -27,3 +27,16 @@
   .workspace-preview-toggle{width:100%}
   .workspace-preview-toggle button{flex:1}
 }
+
+/* Phone preview controls remain readable at narrow widths. */
+@media(max-width:680px){
+ .workspace-preview-toggle {display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}
+ .workspace-preview-toggle button {min-width:0;white-space:normal;overflow-wrap:anywhere}
+ .workspace-preview-controls select {flex:1 1 150px;min-width:0}
+}
+@media(max-width:390px){
+ .workspace-preview-toolbar {padding:12px 14px}
+ .workspace-preview-controls {gap:8px}
+ .workspace-preview-controls label {width:100%}
+ .workspace-preview-controls select {width:100%;flex-basis:100%}
+}

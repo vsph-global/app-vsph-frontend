@@ -11,3 +11,10 @@
   cursor:not-allowed;opacity:.7
 }
 .crm-header-actions .portal-pending {color:#CFDEEF}
+
+/* An assigned application must not look launchable while the SSO route is absent. */
+.app-open.app-open-unavailable {
+ display:flex;align-items:center;justify-content:center;text-align:center;
+ min-height:44px;background:#F1F4F7;border:1px solid #DDE5EF;border-radius:7px;
+ color:#536984;font-weight:600;cursor:default
+}

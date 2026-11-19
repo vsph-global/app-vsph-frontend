@@ -1,0 +1,85 @@
+name: Frontend verification
+on:
+  push:
+    branches:
+      - migration/operations-ui-port
+  pull_request:
+    branches:
+      - main
+      - dev
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+      - name: Set up Node 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+      - name: Install locked dependencies
+        run: npm ci
+      - name: Run source, TypeScript, lint and production build checks
+        run: npm run check
+      - name: Verify unauthenticated routes fail closed
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm run start -- -p 3000 > /tmp/vsph-next.log 2>&1 &
+          server_pid=$!
+          trap 'kill "$server_pid" 2>/dev/null || true' EXIT
+          ready=0
+          for attempt in $(seq 1 30); do
+            if curl -fsS -o /dev/null http://127.0.0.1:3000/login; then
+              ready=1
+              break
+            fi
+            sleep 1
+          done
+          if [ "$ready" -ne 1 ]; then cat /tmp/vsph-next.log; exit 1; fi
+          preview_status=$(curl -s -o /dev/null -w '%{http_code}' http://127.0.0.1:3000/__preview/workspace)
+          if [ "$preview_status" != '404' ]; then
+            echo "Production preview must return 404; got $preview_status"
+            exit 1
+          fi
+          dashboard_status=$(curl -s -o /dev/null -w '%{http_code}' http://127.0.0.1:3000/dashboard)
+          case "$dashboard_status" in
+            302|303|307|308) echo "Anonymous dashboard redirects: $dashboard_status" ;;
+            *) echo "Anonymous dashboard must redirect; got $dashboard_status"; exit 1 ;;
+          esac
+
+  browser-preview:
+    needs: check
+    # Playwright 1.56 Chromium does not support the newer ubuntu-26.04 runner.
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+      - name: Set up Node 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+      - name: Install app and ephemeral browser tester
+        run: |
+          npm ci
+          npm install --no-save --no-package-lock playwright@1.56.1
+          npx playwright install --with-deps chromium
+      - name: Exercise preview roles and responsive layouts in Chromium
+        run: node scripts/preview-visual-smoke.mjs
+      - name: Upload screenshot evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: vsph-frontend-preview-screenshots
+          path: artifacts/ui/
+          if-no-files-found: warn
+          retention-days: 7

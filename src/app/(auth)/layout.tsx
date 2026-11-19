@@ -3,6 +3,7 @@ import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
 import './auth.css';
 import './crm-auth.css';
+import './auth-overrides.css';
 
 export const metadata: Metadata = {
   title: 'VSPH Control Center',

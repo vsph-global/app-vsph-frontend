@@ -1,0 +1,39 @@
+@import url('/fonts.css');
+*{box-sizing:border-box}body{margin:0;font-family:Inter,Arial,sans-serif;color:#00255A;background:#F6F8FB}a{color:#0069C8}button,input,select,textarea{font:inherit}button,a.button{min-height:44px;cursor:pointer;border:1px solid #b9c5d6;border-radius:6px;padding:10px 16px;background:white;color:#00255A}button.primary{background:#0069C8;color:white;border-color:#0069C8}button:disabled{opacity:.5;cursor:default}input,select,textarea{width:100%;min-height:44px;border:1px solid #b9c5d6;border-radius:5px;padding:10px;background:white}textarea{min-height:90px}label{display:grid;gap:8px;font-size:14px;font-weight:500}form{display:grid;gap:18px}.project-page{max-width:1300px;margin:auto;padding:32px}header{display:flex;align-items:center;justify-content:space-between;gap:24px;margin:32px 0}h1{font-size:clamp(28px,4vw,40px);letter-spacing:-.03em;margin:8px 0}h2{font-size:20px;margin:0 0 16px}.eyebrow{font-size:11px;letter-spacing:.12em;font-weight:700}p{line-height:1.6}.panel{background:white;border:1px solid #dce3ec;padding:24px;border-radius:8px;margin:16px 0}.panel button{margin:4px}.table-wrap{overflow:auto}.muted{color:#536984}.form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}:focus-visible{outline:3px solid #50C0E8;outline-offset:3px}[hidden]{display:none!important}@media(max-width:650px){.project-page{padding:20px}.form-grid{grid-template-columns:1fr}header{align-items:start;flex-direction:column}.panel{padding:18px}}@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+
+/* Administrative metadata and long source identifiers must fit narrow screens. */
+.project-page{overflow-wrap:anywhere}.form-grid>*{min-width:0}fieldset{min-width:0}
+
+.project-page input,.project-page select,.project-page textarea{min-width:0;max-width:100%}
+
+#ownershipConfirmed{width:20px;height:20px;min-height:20px;justify-self:start}
+
+/* Shared administrative controls: consistent targets without affecting text links. */
+a.button{display:inline-flex;align-items:center;justify-content:center;text-decoration:none;gap:8px;max-width:100%;text-align:center}
+.project-page input[type=checkbox],.project-page input[type=radio]{width:20px;height:20px;min-height:20px;padding:0;flex-shrink:0}
+.identity-actions,.project-page .actions{display:flex;align-items:center;flex-wrap:wrap;gap:12px}
+.identity-actions button,.project-page .actions button{margin:0}
+
+/* Standalone selectors and paging actions are not part of a form grid. */
+.project-page>label+button,.project-page .panel>label+button{margin-top:12px}
+.project-page>button+button{margin-inline-start:8px}
+.project-page>nav{display:flex;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:24px}
+.project-page>nav a{display:inline-flex;align-items:center;min-height:44px;text-decoration:none}
+.project-page>nav a:hover{text-decoration:underline}
+
+/* Impeccable-style final pass: consistent feedback on shared administrative controls. */
+.project-page button:not(:disabled),.project-page a.button,.project-page input,.project-page select,.project-page textarea{transition:border-color .18s ease,background-color .18s ease,box-shadow .18s ease}
+.project-page button:not(:disabled):hover,.project-page a.button:hover{border-color:#0069C8;background:#F1F7FD}
+.project-page button.primary:not(:disabled):hover{background:#0053A3;color:#FFF}
+.project-page input:focus-visible,.project-page select:focus-visible,.project-page textarea:focus-visible{border-color:#0069C8}
+.project-page button:not(:disabled):active{filter:brightness(.94)}
+@media(prefers-reduced-motion:reduce){.project-page button,.project-page a.button,.project-page input,.project-page select,.project-page textarea{transition:none!important}}
+
+/* Organization-first project handoff, without implying product entitlements. */
+.customer-project-action{padding:17px 20px;border:1px solid #D3E3F2;border-radius:10px;background:#F1F8FE;margin:16px 0 24px}
+.customer-project-action a.button.primary{display:inline-flex;background:#0069C8;color:#FFF;border-color:#0069C8;text-decoration:none}
+.customer-project-action a.button.primary:hover{background:#0053A3;color:#FFF}
+.customer-project-action p{font-size:13px;color:#536984;margin:10px 0 0}
+
+/* Scoped project manager governance overview. */
+.manager-metric-strip{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin:22px 0}.manager-metric-strip>div{display:grid;gap:10px;padding:20px;background:white;border:1px solid #DCE6F1;border-radius:10px;min-width:0}.manager-metric-strip small{font-size:12px;color:#536984}.manager-metric-strip strong{font-size:26px;color:#00255A}.manager-governance .table-wrap table{width:100%;border-collapse:collapse;min-width:680px}.manager-governance th,.manager-governance td{text-align:left;padding:14px 13px;border-bottom:1px solid #E2EAF2;font-size:13px;vertical-align:top}.manager-governance th{font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:#536984}.manager-governance td small{display:block;margin-top:5px;color:#536984}.manager-panel-heading p{max-width:750px;font-size:13px}@media(max-width:650px){.manager-metric-strip{grid-template-columns:1fr}}

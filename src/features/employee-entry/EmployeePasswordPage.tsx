@@ -108,6 +108,8 @@ export function EmployeePasswordPage() {
         cache: 'no-store',
       });
       if (!response.ok) throw new Error('Sign-out failed. Retry.');
+      // Force a fresh document after revoking the temporary credential session.
+      // eslint-disable-next-line @next/next/no-location-assign-relative-destination
       window.location.assign('/login');
     } catch (error) {
       setMessage(error instanceof Error ? error.message : 'Sign-out failed. Retry.');

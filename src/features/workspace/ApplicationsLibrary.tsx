@@ -22,12 +22,6 @@ const presentations: Record<string, { category: string; description: string; ico
   },
 };
 
-function launchPath(code: string) {
-  // Every code is already validated by the server using the original
-  // allowlist. Never trust arbitrary database launch URLs.
-  return '/apps/' + code.toLowerCase() + '/launch';
-}
-
 function ProductIcon({ name }: { name: string }) {
   return <svg className="icon" aria-hidden="true">
     <use href={'/portal-icons.svg#icon-' + name} />
@@ -74,15 +68,15 @@ export function ApplicationsLibrary({ apps, previewMode = false }: { apps: Porta
             return <article key={app.id} className="app-card">
               <div className="app-card-upper">
                 <span className="app-symbol"><ProductIcon name={display.icon} /></span>
-                <span className="app-status">Available</span>
+                <span className="app-status">{previewMode ? 'Example' : 'Assigned'}</span>
               </div>
               <p className="app-category">{display.category}</p>
               <h3>{app.name}</h3>
               <p className="app-description">{display.description}</p>
               {previewMode
                 ? <span className="app-open" aria-disabled="true">Preview only</span>
-                : <Link className="app-open" href={launchPath(app.code)}
-                    aria-label={'Open ' + app.name}>Open application</Link>}
+                : <span className="app-open app-open-unavailable" aria-disabled="true"
+                    title="Application launching requires the approved SSO route">Launch not connected</span>}
             </article>;
           })}
         </div>
@@ -147,8 +141,8 @@ export function AccessOverview({ entries, previewMode = false }: {
               {!failed && (internalRole || organizations.length > 0) ?
                 (previewMode
                   ? <span className="access-unavailable" aria-disabled="true">Preview only</span>
-                  : <Link className="access-open" href={launchPath(app.code)}
-                      aria-label={'Open ' + app.name}>Open</Link>) :
+                  : <span className="access-unavailable" aria-disabled="true"
+                      title="Application launch requires the approved SSO integration">Launch pending</span>) :
                 <span className="access-unavailable">Unavailable</span>}
             </article>
           );

@@ -1,0 +1,5 @@
+/* Temporary UI consistency until the independent invitation entry branch is integrated. */
+.auth-page .invite-entry .invite-pending {
+ display:inline-block;color:#637489;font-size:13px;line-height:1.5;
+ cursor:default;text-decoration:none;overflow-wrap:anywhere
+}

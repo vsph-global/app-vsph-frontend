@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Administration | VSPH Control Center</title>
+  <!-- Admin uses its own VSPH styles: legacy global form margins caused uneven controls. -->
+  <style>
+    @import url('/fonts.css');
+    *,*::before,*::after{box-sizing:border-box}
+    body{margin:0;background:#F6F8FB;color:#132949;font-family:Inter,Arial,sans-serif}
+    .admin-shell{max-width:1400px;margin:auto;padding:32px}
+    .admin-head{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap}
+    .admin-head p,.hint{color:#64748b;line-height:1.55}
+    .admin-head h1{margin-bottom:8px}
+    .admin-nav{display:flex;gap:8px;flex-wrap:wrap;margin:24px 0}
+    .tab{border:1px solid #d5dbea;background:#fff;color:#253F60;padding:11px 15px;border-radius:10px;cursor:pointer;font-weight:600;box-shadow:0 1px 2px #1329490a}
+    .tab.active{background:#0069C8;color:white;border-color:#0069C8}
+    .panel{background:#fff;border:1px solid #dfe5ef;border-radius:12px;padding:24px;margin-bottom:18px;box-shadow:0 4px 16px #13294908}
+    .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
+    .stat{padding:17px;border:1px solid #e1e6ef;background:#fbfcfe;border-radius:12px}.stat strong{display:block;font-size:25px;margin-top:7px}
+    .form-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));column-gap:16px;row-gap:22px;align-items:start}
+    .form-grid>div{min-width:0}
+    .form-grid>div>label{display:block;margin:0 0 8px;line-height:20px;font-size:13px;font-weight:600}
+    .form-grid>div>input,.form-grid>div>select{display:block;width:100%;min-width:0;height:48px;min-height:48px;margin:0;padding:10px 13px;line-height:1.35}
+    .form-grid>.form-actions{grid-column:1/-1;display:flex;align-items:center;margin:0}
+    .form-grid>.form-actions .primary{display:inline-flex;align-items:center;justify-content:center;text-align:center;min-height:46px;min-width:180px;line-height:1.4}
+    #subscriptionForm{grid-template-columns:repeat(auto-fit,minmax(195px,1fr))}
+    .panel>h2{margin:0 0 24px;color:#00255A;font-size:22px;line-height:1.3;font-weight:600}
+    .subscription-hint{margin:14px 0 0;font-size:13px;line-height:1.6}
+    label,legend{display:block;font-size:13px;font-weight:700;margin-bottom:7px;color:#253F60}
+    input,select{width:100%;box-sizing:border-box;padding:12px 13px;border:1px solid #b9c5d6;border-radius:9px;background:#f8fafc;color:#132949;font:inherit;min-height:44px}
+    input::placeholder{color:#98a2b3}
+    input:focus,select:focus{outline:none;border-color:#0069C8;background:#fff;box-shadow:0 0 0 3px #0069C81c}
+    fieldset{margin-top:4px}
+    fieldset label{display:flex;align-items:center;gap:8px;padding:11px 13px;border:1px solid #d7deea;border-radius:9px;background:#f8fafc;font-weight:500;cursor:pointer}
+    fieldset label:hover{border-color:#9BBDE4;background:#F0F6FD}
+    fieldset input{width:auto;min-height:0;accent-color:#0069C8}
+    button.primary{background:#0069C8;color:white;border:0;border-radius:9px;padding:12px 16px;font-weight:700;cursor:pointer;min-height:44px}
+    button.primary:hover{background:#0054A4}
+    button.small{border:1px solid #b9c5d6;border-radius:8px;background:#fff;color:#253F60;padding:8px 11px;cursor:pointer}
+    button.small:hover{border-color:#0069C8;color:#0069C8}
+    .table-wrap{overflow:auto;margin-top:15px}table{width:100%;border-collapse:collapse;min-width:700px}
+    th,td{text-align:left;padding:11px;border-bottom:1px solid #edf0f5;font-size:14px;vertical-align:top}
+    th{background:#f8fafc;color:#475569}td code{font-size:12px}.status{font-weight:700}
+    .message{min-height:22px;color:#334155}.error{color:#b91c1c}.section[hidden]{display:none}
+    @media(max-width:600px){.admin-shell{padding:16px}.panel{padding:17px}.form-grid,#subscriptionForm{grid-template-columns:1fr}.form-grid>.form-actions .primary{width:100%}}
+
+    .admin-head h1{color:#00255A;letter-spacing:-.03em;font-weight:600;font-size:clamp(28px,3vw,38px)}
+    .admin-return{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:10px 16px;text-decoration:none;border:1px solid #C2D5E8;border-radius:8px;background:white;color:#00255A;font-size:13px;font-weight:600}
+    .admin-header-actions{display:flex;flex-wrap:wrap;align-items:center;gap:10px}
+    .admin-purpose{margin-top:28px;padding:28px 30px;border-radius:13px;background:#00255A;color:white}
+    .purpose-label{font-size:11px;font-weight:700;letter-spacing:.14em;color:#B7D4EF}
+    .purpose-header h2{font-size:24px;letter-spacing:-.03em;line-height:1.3;margin:12px 0 8px}
+    .purpose-header p{font-size:13px;line-height:1.75;color:#D5E3F0;max-width:800px;margin:0}
+    .purpose-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin-top:25px}
+    .purpose-grid>div{padding:17px 18px;background:#16416F;border:1px solid #35618A;border-radius:9px;display:flex;flex-direction:column;gap:7px}
+    .purpose-grid span{font-size:11px;font-weight:700;color:#99D4EF}
+    .purpose-grid strong{font-size:13px;font-weight:600}
+    .purpose-grid p{font-size:12px;line-height:1.6;color:#D4E4F1;margin:0}
+    .tab{box-shadow:none;min-height:44px;text-align:center}
+    .tab.active{background:#0069C8;color:#fff;border-color:#0069C8}
+    button.primary{text-align:center;justify-content:center}
+    :focus-visible{outline:3px solid #50C0E8;outline-offset:2px}
+    @media(max-width:720px){.purpose-grid{grid-template-columns:1fr}.admin-purpose{padding:22px}.admin-head{align-items:start}.admin-nav{margin-top:18px}}
+    .onboarding-banner{display:flex;align-items:center;justify-content:space-between;gap:22px;flex-wrap:wrap;background:#F7FBFF;border-color:#CFE1F1}
+    .onboarding-banner>div{max-width:670px}.onboarding-banner h2{color:#00255A;font-size:21px;margin:8px 0 5px;letter-spacing:-.025em}
+    .onboarding-banner .hint{margin:0;font-size:13px}.onboarding-cta{background:#0069C8;color:#fff;border-color:#0069C8;min-width:165px;text-align:center;white-space:nowrap}
+    .onboarding-cta:hover{background:#0054A4;color:white}
+    @media(max-width:600px){.onboarding-banner{align-items:stretch}.onboarding-cta{width:100%}}
+
+    /* Owner-only workforce roles and compact expandable audit cards. */
+    .role-toolbar,.audit-removal-toolbar{display:flex;align-items:end;flex-wrap:wrap;gap:12px;margin:20px 0 14px}
+    .role-toolbar label,.audit-removal-toolbar label{min-width:min(280px,100%);max-width:440px;flex:1;margin:0}
+    .role-toolbar input,.audit-removal-toolbar input{margin-top:7px}
+    .workforce-role-list{display:grid;gap:10px}
+    .workforce-role-item{display:flex;gap:18px;align-items:center;justify-content:space-between;flex-wrap:wrap;border:1px solid #E0E8F2;background:#FBFCFE;border-radius:10px;padding:15px 17px}
+    .workforce-role-item strong{display:block;color:#00255A;font-size:14px}.workforce-role-item small{display:block;color:#64748B;font-size:12px;margin-top:5px;overflow-wrap:anywhere}
+    .workforce-role-item .workforce-role-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+    .audit-view-tabs{display:flex;gap:8px;flex-wrap:wrap;margin:20px 0}
+    .audit-view-btn{border:1px solid #C7D6E5;border-radius:9px;padding:10px 15px;background:white;color:#00255A;min-height:44px;font-weight:600;cursor:pointer}
+    .audit-view-btn.active{background:#00255A;border-color:#00255A;color:#fff}
+    .audit-removal-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(240px,100%),1fr));gap:12px}
+    .audit-removal-card{display:grid;gap:9px;width:100%;min-height:150px;padding:17px;text-align:left;border:1px solid #DFE7F0;border-radius:12px;background:#FBFCFE;color:#00255A;cursor:pointer}
+    .audit-removal-card:hover,.audit-removal-card:focus-visible{border-color:#0069C8;background:#F0F7FD;box-shadow:0 5px 18px #00255A10}
+    .audit-removal-card strong{font-size:15px;line-height:1.4}.audit-removal-card span,.audit-removal-card small{display:block;color:#64748B;font-size:12px;overflow-wrap:anywhere}
+    .audit-removal-card .audit-card-meta{font-size:11px;color:#0069C8;font-weight:600}
+    @media(max-width:600px){.role-toolbar,.audit-removal-toolbar{align-items:stretch}.role-toolbar label,.audit-removal-toolbar label{flex-basis:100%;max-width:none}.audit-removal-grid{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+  <main class="admin-shell">
+    <header class="admin-head">
+      <div><h1>Platform administration</h1></div>
+      <div class="admin-header-actions"><a class="admin-return onboarding-cta" href="/admin/onboarding">New customer</a><button id="logoutButton" class="small">Sign out</button></div>
+    </header>
+    <p id="globalMessage" class="message" role="status"></p>
+    <nav class="admin-nav" aria-label="Administration sections">
+      <button class="tab active" data-tab="overview">Overview</button>
+      <button class="tab" data-tab="organizations">Organizations</button>
+      <button class="tab" data-tab="applications">Applications</button>
+      <button class="tab" data-tab="users">Users</button>
+      <button class="tab" data-tab="subscriptions">Subscriptions</button>
+      <button class="tab" data-tab="access">App Access</button>
+      <a class="tab" href="/admin/outreach-access">Outreach Access</a>
+      <button class="tab" data-tab="roles">App Roles</button>
+      <button class="tab" data-tab="permissions">Roles &amp; Permissions</button>
+      <button class="tab" data-tab="audit">Audit Logs</button>
+    </nav>
+
+    <section class="section" id="section-overview">
+      <div class="panel onboarding-banner">
+        <div><p class="purpose-label" style="color:#0069C8">CUSTOMER ONBOARDING</p>
+        <h2>Create a customer organization</h2>
+        <p class="hint">Create a dedicated organization, invite its owner and optionally configure reusable products.</p></div>
+        <a class="admin-return onboarding-cta" href="/admin/onboarding">New customer</a>
+      </div>
+      <div class="stats">
+        <div class="stat">Organizations<strong id="statOrganizations">—</strong></div>
+        <div class="stat">Users<strong id="statUsers">—</strong></div>
+        <div class="stat">Applications<strong id="statApplications">—</strong></div>
+        <div class="stat">Active / Trial subscriptions<strong id="statSubscriptions">—</strong></div>
+        <div class="stat">Enabled app grants<strong id="statAccess">—</strong></div>
+      </div>
+      <div class="panel" style="margin-top:18px"><h2>Before granting access</h2><p class="hint">For an employee to enter CRM or Music, their organization needs an active or trial subscription and enabled product access. The individual also needs an assigned application role. Use the tabs above to configure these separately.</p></div>
+    </section>
+
+    <section class="section" id="section-organizations" hidden>
+      <div class="panel onboarding-banner">
+        <div>
+          <p class="purpose-label" style="color:#0069C8">GUIDED CUSTOMER SETUP</p>
+          <h2>Bring a new customer on board</h2>
+          <p class="hint">Create the organization first, invite its owner securely, then optionally assign catalog products and subscription terms. No temporary passwords required.</p>
+        </div>
+        <a class="admin-return onboarding-cta" href="/admin/onboarding">Create organization</a>
+      </div>
+      <div class="panel"><h2>Organizations</h2><div id="organizationsTable" class="table-wrap">Loading…</div></div>
+    </section>
+
+    <section class="section" id="section-applications" hidden>
+      <div class="panel"><h2>Add application</h2><p><a href="/admin/products">Open governed product registry</a> — registration and editing now use atomic audited changes.</p>
+        <form id="applicationForm" hidden class="form-grid">
+          <div><label for="appCode">Unique code</label><input id="appCode" required maxlength="40" pattern="[A-Za-z][A-Za-z0-9_]{1,39}" placeholder="CRM"></div>
+          <div><label for="appName">Display name</label><input id="appName" required maxlength="150" placeholder="Customer Relationship Management"></div>
+          <div><label for="appPath">Login path</label><input id="appPath" required pattern="/apps/[a-z0-9-]+/login" placeholder="/apps/crm/login"></div>
+          <div><label for="appStatus">Status</label><select id="appStatus"><option value="active">active</option><option value="maintenance">maintenance</option><option value="retired">retired</option></select></div>
+          <div class="form-actions"><button class="primary" type="submit">Add application</button></div>
+        </form>
+      </div>
+      <div class="panel"><h2>Application catalog</h2><div id="applicationsTable" class="table-wrap">Loading…</div></div>
+    </section>
+
+    <section class="section" id="section-users" hidden>
+      <div class="panel"><h2>Manage customer members</h2><a href="/admin/customers">Customer workspace and invitations</a>
+        <p class="hint">Use customer onboarding to send an email invitation. The recipient chooses their own password. Standalone user invitations and platform administrator changes require the governed identity workflow.</p>
+        <a class="admin-return onboarding-cta" href="/admin/onboarding">New customer</a>
+      </div>
+      <div class="panel"><h2>Users</h2><div id="usersTable" class="table-wrap">Loading…</div></div>
+    </section>
+
+    <section class="section" id="section-subscriptions" hidden>
+      <div class="panel"><h2>Create or update subscription</h2>
+        <form id="subscriptionForm" class="form-grid" aria-describedby="subscriptionHelp">
+          <div><label for="subOrg">Organization</label><select id="subOrg" required></select></div>
+          <div><label for="subApp">Application</label><select id="subApp" required></select></div>
+          <div><label for="subPlan">Plan code</label><input id="subPlan" value="prototype" maxlength="60" required></div>
+          <div><label for="subStatus">Status</label><select id="subStatus"><option>trial</option><option selected>active</option><option>past_due</option><option>cancelled</option><option>expired</option></select></div>
+          <div><label for="subEnd">End date (optional)</label><input id="subEnd" type="datetime-local"></div>
+          <div class="form-actions"><button class="primary" type="submit">Save subscription</button></div>
+        </form><p class="hint subscription-hint" id="subscriptionHelp">One subscription per organization and application. Saving again updates the existing record.</p>
+      </div>
+      <div class="panel"><h2>Subscriptions</h2><div id="subscriptionsTable" class="table-wrap">Loading…</div></div>
+    </section>
+
+    <section class="section" id="section-access" hidden>
+      <div class="panel"><h2>Grant or change application access</h2>
+        <form id="accessForm" class="form-grid">
+          <div><label for="accessOrg">Organization</label><select id="accessOrg" required></select></div>
+          <div><label for="accessApp">Application</label><select id="accessApp" required></select></div>
+          <div><label for="accessStatus">Access status</label><select id="accessStatus"><option value="enabled">enabled</option><option value="suspended">suspended</option><option value="revoked">revoked</option></select></div>
+          <div class="form-actions"><button class="primary" type="submit">Save app access</button></div>
+        </form><p class="hint">For a client to open an app, it needs enabled access and an active/trial subscription.</p>
+      </div>
+      <div class="panel"><h2>Application access grants</h2><div id="accessTable" class="table-wrap">Loading…</div></div>
+    </section>
+
+    <section class="section" id="section-roles" hidden>
+      <div class="panel"><h2>Assign an individual application role</h2><p class="hint">A subscription grants access to an organization, but each individual also needs a role. You can assign distinct roles for CRM and Music.</p>
+        <form id="roleForm" class="form-grid">
+          <div><label for="roleEmail">Existing user email</label><input id="roleEmail" type="email" placeholder="employee@example.com" required></div>
+          <div><label for="roleOrg">Organization</label><select id="roleOrg" required></select></div>
+          <div><label for="roleApp">Application</label><select id="roleApp" required></select></div>
+          <div><label for="roleValue">Role</label><select id="roleValue"><option value="super_admin">App Super Admin</option><option value="admin">Admin</option><option value="manager">Manager</option><option value="user">User</option><option value="viewer">Viewer</option><option value="staff" data-music-only disabled hidden>Music staff</option><option value="musician" data-music-only disabled hidden>Musician</option></select></div>
+          <div class="form-actions"><button class="primary" type="submit">Assign role</button></div>
+        </form>
+      </div><div class="panel"><h2>Application role assignments</h2><div id="rolesTable" class="table-wrap">Loading…</div></div>
+    </section>
+
+    <section class="section" id="section-permissions" hidden>
+      <div class="panel"><h2>Workforce roles &amp; permissions</h2>
+        <p class="hint">Only the platform owner may appoint or revoke HR managers. HR access is separate from customer product roles. Employees must have an active roster record, matching portal identity and accepted account link before HR appointment.</p>
+        <div class="role-toolbar">
+          <label for="employeePermissionSearch">Find employee
+            <input id="employeePermissionSearch" type="search" maxlength="80" placeholder="Name, email or department">
+          </label>
+          <button id="refreshWorkforceRoles" type="button" class="small">Refresh HR roles</button>
+          <a class="admin-return" href="/employees">Employee directory</a>
+        </div>
+        <div id="workforceRoleMessage" class="hint" role="status" aria-live="polite"></div>
+        <div id="workforceRoles" class="workforce-role-list"></div>
+      </div>
+    </section>
+    <section class="section" id="section-audit" hidden>
+      <div class="panel">
+       <h2>Audit logs</h2>
+       <p class="hint">Platform-owner audit activity. Employee-removal records are visible only here, not on the HR employee-management page.</p>
+       <div class="audit-view-tabs" role="group" aria-label="Audit log categories">
+        <button class="audit-view-btn active" data-audit-view="all" type="button" aria-pressed="true">All events</button>
+        <button class="audit-view-btn" data-audit-view="removals" type="button" aria-pressed="false">Employee removals</button>
+       </div>
+       <div id="auditAllView"><p class="hint">Latest 200 audit events</p><div id="auditTable" class="table-wrap">Loading…</div></div>
+       <div id="auditRemovalsView" hidden>
+        <div class="audit-removal-toolbar">
+         <label for="auditEmployeeSearch">Search removed employees
+          <input id="auditEmployeeSearch" type="search" maxlength="80" placeholder="Employee, actor or reason">
+         </label>
+         <button type="button" id="refreshAuditRemovals" class="small">Refresh history</button>
+        </div>
+        <p id="auditRemovalSummary" class="hint" role="status" aria-live="polite">Latest 100 removal records</p>
+        <div id="auditRemovalGrid" class="audit-removal-grid"></div>
+       </div>
+      </div>
+    </section>
+  </main>
+  <script src="/admin.js"></script>
+</body>
+</html>
+

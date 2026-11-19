@@ -54,7 +54,7 @@ test('workspace routes are private, backend-verified and fail closed by default'
   assert.match(header, /platformRole === 'super_admin'/);
   assert.match(header, /flags\?\.employee === true/);
   assert.match(header, /flags\?\.management === true/);
-  assert.match(header, /<nav id="workspaceNavigation"/);
+  assert.match(header, /<nav ref=\{navigationRef\} id="workspaceNavigation"/);
   assert.match(header, /disabled.*Search/);
   assert.match(header, /fetch\('\/api\/auth\/logout'/);
   assert.match(dashboard, /loadAuthorizedApps\(/);

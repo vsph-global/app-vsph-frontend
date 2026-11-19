@@ -23,7 +23,10 @@ async function requestLogin(endpoint: string, payload: Record<string, string>) {
 
   const body = (await response.json().catch(() => ({}))) as LoginResult;
   if (!response.ok) {
-    const error = new Error(body.message || 'Unable to sign in. Please try again.') as ApiError;
+    const error = new Error(body.message ||
+      (response.status === 404 || response.status === 503
+        ? 'Sign-in service is not connected in this environment.'
+        : 'Unable to sign in. Please try again.')) as ApiError;
     error.code = body.code;
     error.factors = body.factors;
     throw error;
@@ -284,7 +287,7 @@ export function AuthPage({ appCode }: AuthPageProps) {
             </form>
             <div id="inviteEntry" className="invite-entry" hidden={isApplicationLogin}>
               <span>Invited to VSPH?</span>
-              <a href="/accept-invite">How to activate your account</a>
+              <Link href="/accept-invite">How to activate your account</Link>
             </div>
           </section>
         </main>
