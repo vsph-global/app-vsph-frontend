@@ -8,7 +8,7 @@
     "start": "next start",
     "lint": "eslint",
     "typecheck": "node scripts/clean-next-route-types.mjs && next typegen && tsc --noEmit",
-    "test:migration": "node --test tests/migration-source.test.mjs tests/workspace-entry.test.mjs tests/workspace-preview.test.mjs tests/invitation-entry.test.mjs tests/role-dashboards.test.mjs tests/employee-entry.test.mjs tests/projects-preview.test.mjs tests/projects-live.test.mjs tests/protected-proxy.test.mjs tests/preview-manifest.test.mjs tests/operations-preview.test.mjs tests/session-logout.test.mjs tests/ui-polish.test.mjs tests/auth-ui.test.mjs",
+    "test:migration": "node --test tests/migration-source.test.mjs tests/workspace-entry.test.mjs tests/workspace-preview.test.mjs tests/invitation-entry.test.mjs tests/role-dashboards.test.mjs tests/employee-entry.test.mjs tests/projects-preview.test.mjs tests/projects-live.test.mjs tests/protected-proxy.test.mjs tests/preview-manifest.test.mjs tests/operations-preview.test.mjs tests/session-logout.test.mjs tests/ui-polish.test.mjs tests/auth-ui.test.mjs tests/project-detail-live.test.mjs tests/project-write.test.mjs tests/project-work.test.mjs tests/project-workforce.test.mjs",
     "check": "npm run test:migration && npm run typecheck && npm run lint && npm run build && npm run verify:preview-route",
     "verify:preview-route": "node scripts/verify-preview-route.mjs"
   },

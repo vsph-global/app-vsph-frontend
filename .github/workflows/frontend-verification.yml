@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - migration/operations-ui-port
+      - integration/projects-live-details
   pull_request:
     branches:
       - main
@@ -54,6 +55,9 @@ jobs:
             302|303|307|308) echo "Anonymous dashboard redirects: $dashboard_status" ;;
             *) echo "Anonymous dashboard must redirect; got $dashboard_status"; exit 1 ;;
           esac
+
+      - name: Verify project write gateway against isolated mock backend
+        run: node scripts/projects-write-http-smoke.mjs
 
   browser-preview:
     needs: check

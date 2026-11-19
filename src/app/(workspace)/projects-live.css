@@ -17,3 +17,87 @@
  .project-workspace .project-heading .actions{flex-wrap:wrap;gap:10px}
  .project-workspace .project-live-refresh{width:100%}
 }
+
+/* Read-only, authenticated project details. Original layout styles remain unchanged. */
+.project-live-open{color:#0069c8;font-weight:650;text-decoration:underline;text-underline-offset:3px}
+.project-live-open:focus-visible,.project-live-back:focus-visible,
+.project-live-detail .project-v2-nav a:focus-visible{outline:3px solid #50c0e8;outline-offset:3px}
+.project-live-back{display:inline-flex;min-height:40px;align-items:center;color:#0069c8;text-decoration:none}
+.project-live-detail .project-v2-nav{display:flex;flex-wrap:wrap;gap:8px;overflow-wrap:anywhere}
+.project-live-detail .project-v2-nav a{display:inline-flex;align-items:center;min-height:40px;
+  border:1px solid #bfd0e2;border-radius:5px;padding:7px 12px;color:#005ca9;text-decoration:none}
+.project-live-detail .project-v2-nav a:hover{background:#eaf3fa}
+.project-live-section{margin-top:20px}
+.project-live-rows{padding:0;margin:12px 0;list-style:none}
+.project-live-rows li{display:flex;flex-wrap:wrap;gap:8px 16px;justify-content:space-between;
+  padding:12px 0;border-bottom:1px solid #dde5ee;overflow-wrap:anywhere}
+.project-live-rows li:last-child{border-bottom:0}
+.project-live-rows span{color:#536984}
+.project-live-section h3{font-size:15px;margin-top:20px}
+@media(max-width:650px){.project-live-section{padding:16px}.project-live-rows li{display:block}
+  .project-live-rows li span{display:block;margin-top:5px}}
+
+/* Authenticated, backend-governed project forms */
+.project-live-form{display:grid;gap:14px;max-width:720px;margin-top:20px}
+.project-live-form label{display:grid;gap:6px;font-size:14px;font-weight:600}
+.project-live-form input,.project-live-form textarea,.project-live-form select{
+  display:block;width:100%;min-height:43px;padding:10px;
+  border:1px solid #b8c8dc;border-radius:6px;background:#fff;color:#23354a;font:inherit}
+.project-live-form textarea{resize:vertical;min-height:96px}
+.project-live-form input:focus-visible,.project-live-form textarea:focus-visible,
+.project-live-form select:focus-visible{outline:3px solid #50c0e8;outline-offset:1px}
+.project-live-form-dates{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.project-live-form button,.project-live-editor>button{min-height:44px;padding:10px 16px;
+  border:1px solid #0969bb;border-radius:6px;background:#0969bb;color:#fff;
+  font-weight:650;cursor:pointer}
+.project-live-form button:disabled{opacity:.55;cursor:not-allowed}
+.project-live-form-actions{display:flex;gap:12px;flex-wrap:wrap}
+.project-live-form-actions button[type="button"]{background:#fff;color:#0969bb}
+.project-live-editor{min-width:0}
+.project-live-editor .project-live-form{margin-top:0}
+@media(max-width:650px){.project-live-form-dates{grid-template-columns:1fr}
+  .project-live-editor{width:100%}
+  .project-live-form-actions button{flex:1}
+}
+
+
+/* Backend-authorized task & milestone action affordances */
+.project-work-controls{margin-top:15px;min-width:0}
+.project-work-controls>button,.project-work-status button,.project-work-refresh{
+  border:1px solid #0969bb;border-radius:6px;padding:9px 12px;min-height:40px;
+  background:#fff;color:#0969bb;font:inherit;font-weight:650;cursor:pointer
+}
+.project-work-controls button:disabled,.project-work-status button:disabled{
+  opacity:.55;cursor:not-allowed
+}
+.project-work-form{padding:16px;border:1px solid #c9d6e6;border-radius:7px}
+.project-work-form h3{margin:0}
+.project-work-status{display:flex;align-items:center;gap:7px;flex-wrap:wrap;max-width:340px}
+.project-work-status select{min-height:40px;max-width:170px;border:1px solid #b8c8dc;
+  border-radius:6px;background:#fff;padding:8px;color:#23354a;font:inherit}
+.project-work-status select:focus-visible,.project-work-status button:focus-visible,
+.project-work-controls>button:focus-visible{outline:3px solid #50c0e8;outline-offset:2px}
+.project-work-result{max-width:440px}
+.project-work-result p{margin:8px 0}
+.project-work-result .project-work-ok{color:#206748}
+.project-work-status .project-work-result{flex-basis:100%}
+@media(max-width:650px){.project-work-status{max-width:100%}.project-work-status select{max-width:100%}}
+
+.project-work-form h4{font-size:1rem;margin:0}
+.project-work-controls .project-work-result[role="status"]{margin-top:8px}
+
+.project-task-thread{margin-top:9px;max-width:520px}
+.project-task-thread>summary{cursor:pointer;color:#0969bb;font-size:13px;font-weight:600}
+.project-task-thread .project-live-rows li{font-size:13px;white-space:normal}
+.project-task-thread .project-work-form{max-width:440px}
+.project-workforce{margin:16px 0;padding:14px;border:1px solid #d4e0ed;border-radius:8px}
+.project-workforce-member{align-items:flex-start}
+.project-workforce-member>div:first-child{flex:1;min-width:180px}
+.project-workforce-actions{display:flex;gap:14px;flex-wrap:wrap}
+.project-workforce-action{display:grid;gap:7px;padding:10px;border:1px solid #dae3ed;border-radius:6px}
+.project-workforce-confirm{display:flex;gap:8px;align-items:flex-start;max-width:240px;font-size:13px}
+.project-workforce-confirm input{margin-top:4px}
+.project-workforce-action>button{border:1px solid #0969bb;background:#fff;color:#0969bb;padding:8px 12px;border-radius:6px;cursor:pointer}
+.project-workforce-action>button:disabled{opacity:.5;cursor:not-allowed}
+.project-workforce .project-live-form{max-width:720px}
+@media(max-width:650px){.project-workforce{padding:10px}.project-workforce-actions{display:grid;width:100%}}

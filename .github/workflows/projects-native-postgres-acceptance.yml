@@ -1,0 +1,129 @@
+name: Projects isolated PostgreSQL acceptance
+
+on:
+  push:
+    branches:
+      - integration/projects-live-details
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  native-postgres-and-next:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_DB: vsph_test
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: fixture-only
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres -d vsph_test"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 15
+
+    env:
+      TEST_DATABASE_URL: postgresql://postgres:fixture-only@127.0.0.1:5432/vsph_test
+      VSPH_PUBLIC_ORIGIN: http://127.0.0.1:47045
+      VSPH_INTERNAL_API_ORIGIN: http://127.0.0.1:3100
+      PUBLIC_ORIGIN: http://127.0.0.1:47045
+      NODE_ENV: test
+      SUPABASE_URL: ''
+      SUPABASE_SECRET_KEY: ''
+      SUPABASE_PUBLISHABLE_KEY: ''
+
+    steps:
+      - name: Check out frontend
+        uses: actions/checkout@v4
+
+      - name: Check out pinned public legacy backend
+        uses: actions/checkout@v4
+        with:
+          repository: vsph-global/vsph-control-center
+          ref: d5ad126ea0dfc2fd5e8828f9ce4e1dc4557889b8
+          path: .acceptance-backend
+          persist-credentials: false
+
+      - name: Set up Node 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+
+      - name: Install both lockfiles
+        run: |
+          npm ci
+          npm ci --prefix .acceptance-backend
+
+      - name: Apply documented test-only SQL delimiter correction in disposable checkout
+        run: node scripts/prepare-isolated-backend.mjs
+
+      - name: Build production frontend
+        run: npm run build
+        env:
+          NODE_ENV: production
+
+      - name: Install Chromium for authenticated native DB UI acceptance
+        run: cd .acceptance-backend && npx playwright install --with-deps chromium
+
+      - name: Verify real project writes in disposable native PostgreSQL
+        shell: bash
+        run: |
+          set -euo pipefail
+          (cd .acceptance-backend && PORT=3100 node tests/e2e/fixture-server.js) > /tmp/vsph-legacy-fixture.log 2>&1 &
+          backend_pid=$!
+          NODE_ENV=production npm run start -- -p 47045 > /tmp/vsph-next-app.log 2>&1 &
+          next_pid=$!
+          cleanup() {
+            kill "$next_pid" "$backend_pid" 2>/dev/null || true
+            wait "$next_pid" "$backend_pid" 2>/dev/null || true
+          }
+          trap cleanup EXIT
+
+          backend_ready=0
+          for attempt in $(seq 1 45); do
+            # A missing cookie MUST return HTTP 401 from the actual session route.
+            # The legacy /login HTML handler can return 500 in fixture mode.
+            backend_status=$(curl -s -o /dev/null -w '%{http_code}' http://127.0.0.1:3100/api/auth/me || true)
+            if [ "$backend_status" = "401" ]; then backend_ready=1; break; fi
+            if grep -q "Isolated browser fixture boot failed" /tmp/vsph-legacy-fixture.log; then break; fi
+            if ! kill -0 "$backend_pid" 2>/dev/null; then break; fi
+            sleep 2
+          done
+          if [ "$backend_ready" -ne 1 ]; then
+            echo "Disposable backend fixture did not start"; tail -80 /tmp/vsph-legacy-fixture.log; exit 1
+          fi
+
+          frontend_ready=0
+          for attempt in $(seq 1 60); do
+            if curl -fsS -o /dev/null http://127.0.0.1:47045/login; then frontend_ready=1; break; fi
+            if ! kill -0 "$next_pid" 2>/dev/null; then break; fi
+            sleep 1
+          done
+          if [ "$frontend_ready" -ne 1 ]; then
+            echo "Production Next.js fixture did not start"; tail -80 /tmp/vsph-next-app.log; exit 1
+          fi
+
+          if ! timeout 90s node scripts/projects-native-postgres-acceptance.mjs; then
+            echo "Native PostgreSQL acceptance did not complete successfully"
+            tail -50 /tmp/vsph-legacy-fixture.log || true
+            tail -50 /tmp/vsph-next-app.log || true
+            exit 1
+          fi
+
+      - name: Upload test logs if failing
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: projects-isolated-acceptance-diagnostics
+          path: |
+            /tmp/vsph-legacy-fixture.log
+            /tmp/vsph-next-app.log
+          if-no-files-found: ignore
+          retention-days: 3

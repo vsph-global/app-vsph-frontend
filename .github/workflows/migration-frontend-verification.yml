@@ -7,6 +7,7 @@ on:
       - migration/role-dashboards-preview
       - migration/projects-readonly-port
       - migration/operations-ui-port
+      - integration/projects-live-details
   pull_request:
     branches:
       - dev
