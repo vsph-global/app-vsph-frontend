@@ -8,6 +8,7 @@ on:
       - migration/projects-readonly-port
       - migration/operations-ui-port
       - integration/projects-live-details
+      - integration/ops-live-on-projects-20261119
   pull_request:
     branches:
       - dev

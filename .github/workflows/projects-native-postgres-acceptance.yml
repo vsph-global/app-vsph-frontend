@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - integration/projects-live-details
+      - integration/ops-live-on-projects-20261119
   workflow_dispatch:
 
 permissions:
