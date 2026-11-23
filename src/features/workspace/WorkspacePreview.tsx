@@ -97,6 +97,7 @@ const navViews: Record<string, PreviewView> = {
   '/admin/products': 'products',
   '/admin/project-managers': 'managers',
   '/admin': 'admin',
+  '/admin/permissions': 'admin',
   '/admin?tab=permissions': 'admin',
   '/admin?tab=audit&view=removals': 'admin',
   '/admin/provisioning': 'provisioning',
@@ -136,8 +137,10 @@ export function WorkspacePreview() {
   const [adminTab, setAdminTab] = useState<'overview' | 'permissions' | 'audit'>('overview');
   const { user, flags } = previewIdentity(role);
   const available = screens.filter(x => x.roles.includes(role));
-  const activePreviewHref = view === 'admin' && adminTab !== 'overview'
-    ? '/admin?tab=' + adminTab + (adminTab === 'audit' ? '&view=removals' : '')
+  const activePreviewHref = view === 'admin' && adminTab === 'permissions'
+    ? '/admin/permissions'
+    : view === 'admin' && adminTab === 'audit'
+    ? '/admin?tab=audit&view=removals'
     : Object.entries(navViews).find(
       ([href, target]) => target === view && !href.includes('?')
     )?.[0] ?? '';
@@ -169,7 +172,7 @@ export function WorkspacePreview() {
     const target = navViews[href];
     if (target && canNavigatePreview(href)) {
       if (target === 'admin') {
-        setAdminTab(href.includes('tab=permissions') ? 'permissions' :
+        setAdminTab(href === '/admin/permissions' || href.includes('tab=permissions') ? 'permissions' :
           href.includes('tab=audit') ? 'audit' : 'overview');
       }
       setView(target);

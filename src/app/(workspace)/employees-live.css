@@ -1,0 +1,92 @@
+/* Authenticated employee directory; does not alter frozen legacy preview CSS. */
+.employee-live-workspace{padding:28px clamp(14px,3vw,40px);color:#22334b}
+.employee-live-heading{display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap;margin-bottom:24px}
+.employee-live-heading h1{font-size:clamp(24px,3vw,34px);margin:0;color:#1b2a40}
+.employee-live-heading p{margin:7px 0 0;color:#607188}
+.employee-live-action,.employee-live-filters button{display:inline-flex;justify-content:center;
+  align-items:center;min-height:42px;border:1px solid #aabfd8;border-radius:7px;
+  padding:9px 14px;background:#fff;color:#075fa9;text-decoration:none;font:inherit;font-weight:650}
+.employee-live-summary{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px;margin:0 0 22px}
+.employee-live-summary article{background:#fff;border:1px solid #d7e2ec;border-radius:9px;
+  padding:16px;display:grid;gap:9px}
+.employee-live-summary span{font-size:13px;color:#61748a}
+.employee-live-summary strong{font-size:clamp(22px,2.5vw,29px);font-variant-numeric:tabular-nums}
+.employee-live-panel{border:1px solid #d7e2ec;border-radius:10px;background:#fff;padding:22px;margin-bottom:20px}
+.employee-live-panel h2{font-size:20px;margin:0 0 20px}
+.employee-live-departments{display:grid;gap:12px}
+.employee-live-departments>div{display:grid;grid-template-columns:minmax(160px,250px) minmax(70px,1fr) 46px;
+ align-items:center;gap:12px;font-size:13px}
+.employee-live-departments progress{width:100%;accent-color:#176da8;height:12px}
+.employee-live-departments strong{text-align:right;font-variant-numeric:tabular-nums}
+.employee-live-filters{display:flex;align-items:end;flex-wrap:wrap;gap:12px;margin-bottom:22px}
+.employee-live-filters label{display:grid;gap:6px;flex:1;min-width:160px;font-size:13px;font-weight:650}
+.employee-live-filters input,.employee-live-filters select{min-height:42px;padding:9px 11px;
+ border:1px solid #acc1d5;border-radius:6px;font:inherit;background:#fff;color:#213850}
+.employee-live-filters button{background:#075fa9;color:#fff;cursor:pointer}
+.employee-live-filters a{padding:10px;color:#075fa9}
+.employee-live-table{overflow-x:auto}
+.employee-live-table:focus-visible,.employee-live-workspace :is(a,button,input,select):focus-visible{
+ outline:3px solid #5ac8ed;outline-offset:3px}
+.employee-live-table table{border-collapse:collapse;width:100%;min-width:620px;font-size:14px}
+.employee-live-table :is(th,td){border-bottom:1px solid #e2e9f0;padding:12px 10px;text-align:left;vertical-align:top}
+.employee-live-table th{color:#62758b;font-size:12px;text-transform:uppercase;letter-spacing:.035em}
+.employee-live-table td strong{display:block}
+.employee-live-table td small{display:block;margin-top:5px;color:#728097}
+.employee-live-table>p{padding:20px 10px;color:#697a90}
+.employee-live-pagination{display:flex;flex-wrap:wrap;align-items:center;gap:12px;margin-top:16px}
+.employee-live-pagination p{flex:1;color:#5d718a;margin:0;font-size:13px}
+.employee-live-pagination>a:not(.employee-live-action){color:#075fa9}
+@media(max-width:960px){.employee-live-summary{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:640px){
+ .employee-live-workspace{padding:16px}
+ .employee-live-summary{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .employee-live-panel{padding:14px}
+ .employee-live-departments>div{grid-template-columns:1fr 2fr 30px;gap:8px}
+ .employee-live-filters{display:grid;grid-template-columns:1fr;width:100%}
+ .employee-live-filters label{min-width:0}
+}
+
+.employee-live-table button{border:1px solid #aabfd8;border-radius:6px;padding:7px 12px;
+ background:#fff;color:#075fa9;font:inherit;font-weight:650;cursor:pointer}
+.employee-live-table button:hover{background:#edf5fc}
+.employee-live-edit{margin-top:22px;border:1px solid #c8d9e9;border-radius:10px;
+ padding:20px;background:#f8fbff}
+.employee-live-edit-heading{display:flex;align-items:flex-start;justify-content:space-between;
+ flex-wrap:wrap;gap:15px}
+.employee-live-edit-heading h3{margin:0;font-size:18px}
+.employee-live-edit-heading p{margin:6px 0 0;color:#607187;font-size:13px}
+.employee-live-edit-heading button,.employee-live-edit-actions button{background:#fff;
+ border:1px solid #aabfd8;padding:10px 16px;border-radius:7px;color:#075fa9;font:inherit;cursor:pointer}
+.employee-live-edit>p{color:#5f7086;font-size:13px}
+.employee-live-edit form{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
+ column-gap:18px;row-gap:4px}
+.employee-live-edit form>label:not(.employee-live-confirm){display:grid;gap:7px;
+ margin:9px 0;font-weight:600;font-size:13px}
+.employee-live-edit :is(input,select){min-height:42px;border:1px solid #acbfd4;
+ background:#fff;color:#263a50;padding:9px 10px;border-radius:6px;font:inherit;width:100%}
+.employee-live-edit .employee-live-confirm{display:flex;gap:10px;align-items:center;
+ grid-column:1/-1;font-size:13px;font-weight:600;margin:16px 0}
+.employee-live-confirm input[type=checkbox]{height:18px;min-height:18px;width:18px}
+.employee-live-edit-actions{grid-column:1/-1;display:flex;align-items:center;
+ gap:12px;justify-content:flex-end;margin-top:12px}
+.employee-live-edit-actions button:last-child{background:#075fa9;color:#fff;border-color:#075fa9}
+.employee-live-edit-actions button:disabled{opacity:.55;cursor:not-allowed}
+@media(max-width:640px){.employee-live-edit form{grid-template-columns:1fr}}
+
+.employee-live-heading-actions{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.employee-live-heading-actions a:last-child{background:#075fa9;color:#fff;border-color:#075fa9}
+.employee-live-breadcrumb{display:flex;gap:10px;margin-bottom:17px;color:#61748a}
+.employee-live-breadcrumb a{color:#075fa9}
+.employee-live-onboard{max-width:920px}
+.employee-live-onboard form{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
+ gap:15px}
+.employee-live-onboard form>label{display:grid;gap:7px;font-size:13px;font-weight:650}
+.employee-live-onboard :is(input,select){border:1px solid #abc0d8;border-radius:6px;
+ padding:10px;background:#fff;color:#21374e;min-height:42px;font:inherit;width:100%}
+.employee-live-onboard .employee-live-edit-actions{margin-top:16px}
+.employee-live-onboard .employee-live-edit-actions a{color:#075fa9;text-decoration:underline}
+.employee-live-success{display:grid;gap:8px}
+.employee-live-success p{max-width:620px;line-height:1.5}
+.employee-live-success a{width:max-content}
+@media(max-width:640px){.employee-live-onboard form{grid-template-columns:1fr}
+ .employee-live-heading-actions a{flex:1}}

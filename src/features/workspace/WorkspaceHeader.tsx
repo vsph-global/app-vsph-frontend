@@ -5,7 +5,7 @@ import { usePathname } from 'next/navigation';
 import { useRef, useState } from 'react';
 import type { HrAccess, PortalUser } from './contracts';
 
-const activePages = new Set(['/dashboard', '/applications', '/projects']);
+const activePages = new Set(['/dashboard', '/applications', '/projects', '/reports', '/notifications', '/employees', '/hr', '/admin/customers', '/admin/finance', '/admin/finance/journal', '/admin', '/admin/provisioning', '/admin/onboarding', '/admin/products', '/admin/permissions', '/account/profile', '/account/security']);
 
 type NavItem = { label: string; href: string; show?: boolean };
 type NavGroup = { label: string; items: NavItem[]; show?: boolean };
@@ -62,6 +62,7 @@ export function WorkspaceHeader({ user, flags, accessFailed, previewMode = false
       { label: 'Projects', href: '/projects' },
       { label: 'My tasks', href: '/dashboard#employeeDashboardWork', show: flags?.employee === true },
       { label: 'Reports', href: '/reports' },
+      { label: 'Notifications', href: '/notifications' },
     ] },
     { label: 'Organizations', items: [
       { label: 'My organizations', href: '/organizations' },
@@ -86,7 +87,7 @@ export function WorkspaceHeader({ user, flags, accessFailed, previewMode = false
       ] },
     { label: 'Administration', show: isOwner, items: [
       { label: 'Platform administration', href: '/admin' },
-      { label: 'Roles & permissions', href: '/admin?tab=permissions' },
+      { label: 'Roles & permissions', href: '/admin/permissions' },
       { label: 'Provisioning recovery', href: '/admin/provisioning' },
       { label: 'Finance', href: '/admin/finance' },
       { label: 'Finance journal', href: '/admin/finance/journal' },
@@ -183,8 +184,10 @@ export function WorkspaceHeader({ user, flags, accessFailed, previewMode = false
                       onClick={() => previewAccount('/account/security')}>Security &amp; sessions</button>
                   </>
                 : <>
-                    <span className="portal-link portal-pending" aria-disabled="true">Your profile</span>
-                    <span className="portal-link portal-pending" aria-disabled="true">Security &amp; sessions</span>
+                    <Link className="portal-link" href="/account/profile"
+                      onClick={closeMenu}>Your profile</Link>
+                    <Link className="portal-link" href="/account/security"
+                      onClick={closeMenu}>Security &amp; sessions</Link>
                   </>}
               {previewMode
                 ? <span className="portal-link portal-pending" aria-disabled="true">Sign out unavailable in preview</span>

@@ -48,7 +48,9 @@ test('operations selections and mobile preview controls remain in sync', async (
 test('administration navigation opens the requested preview subtab', async () => {
  const workspace = await read('src/features/workspace/WorkspacePreview.tsx');
  const admin = await read('src/features/operations/AdminPreview.tsx');
- assert.match(workspace, /setAdminTab\(href\.includes\('tab=permissions'\)/);
+  assert.ok(workspace.includes("'/admin/permissions': 'admin'"));
+  assert.ok(workspace.includes("'/admin?tab=permissions': 'admin'"));
+  assert.ok(workspace.includes("href === '/admin/permissions' || href.includes('tab=permissions')"));
  assert.match(workspace, /href\.includes\('tab=audit'\)/);
  assert.match(workspace, /key=\{view \+ adminTab\} initialTab=\{adminTab\}/);
  assert.match(admin, /const \[tab,setTab\]=useState<Tab>\(initialTab\)/);

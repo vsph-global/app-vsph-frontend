@@ -1,0 +1,37 @@
+/* Live HRMS workspace. Original HR preview styles are untouched. */
+.hr-live-workspace{padding:28px clamp(14px,3vw,40px);color:#22344b}
+.hr-live-heading{display:flex;justify-content:space-between;align-items:center;gap:16px;
+ flex-wrap:wrap;margin-bottom:22px}
+.hr-live-heading h1{font-size:clamp(24px,3vw,34px);margin:0}
+.hr-live-heading p{color:#61748b;margin:7px 0 0}
+.hr-live-heading a,.hr-live-filters button,.hr-live-pagination a{display:inline-block;
+ padding:9px 13px;border:1px solid #b1c5da;border-radius:7px;color:#075fa9;
+ text-decoration:none;background:#fff;font:inherit;font-weight:650;cursor:pointer}
+.hr-live-panel{border:1px solid #d8e2ec;border-radius:10px;background:#fff;padding:22px}
+.hr-live-panel h2{font-size:20px;margin:0 0 15px}
+.hr-live-panel p{color:#556a84;line-height:1.5}
+.hr-live-secondary-heading{margin-top:28px!important}
+.hr-live-filters{display:flex;align-items:end;gap:12px;margin-bottom:20px;flex-wrap:wrap}
+.hr-live-filters label{display:grid;gap:6px;min-width:170px;font-weight:600}
+.hr-live-filters select,.hr-live-review select,.hr-live-review textarea{
+ border:1px solid #b2c5d7;padding:9px;background:#fff;border-radius:6px;
+ color:#243b55;font:inherit;width:100%}
+.hr-live-filters select{min-height:41px}
+.hr-live-filters button,.hr-live-review button{background:#075fa9;color:#fff;
+ border:1px solid #075fa9;padding:9px 12px;border-radius:7px;cursor:pointer;font-weight:650}
+.hr-live-review button:disabled{opacity:.5;cursor:not-allowed}
+.hr-live-table{overflow-x:auto}
+.hr-live-table:focus-visible,.hr-live-workspace :is(input,select,textarea,button,a):focus-visible{
+ outline:3px solid #50c0e8;outline-offset:3px}
+.hr-live-table table{width:100%;min-width:820px;border-collapse:collapse;font-size:13px}
+.hr-live-table :is(th,td){border-bottom:1px solid #e1e9f0;padding:12px 10px;text-align:left;vertical-align:top}
+.hr-live-table th{font-size:12px;color:#60758d;text-transform:uppercase;letter-spacing:.04em}
+.hr-live-reason{max-width:240px;white-space:pre-wrap;overflow-wrap:anywhere}
+.hr-live-review{display:grid;gap:8px;width:240px}
+.hr-live-review label:not(.hr-live-checkbox){display:grid;gap:4px;font-weight:600}
+.hr-live-review textarea{resize:vertical}
+.hr-live-review .hr-live-checkbox{display:flex;align-items:flex-start;gap:8px}
+.hr-live-checkbox input{width:17px;height:17px;flex:0 0 17px;margin:2px 0 0}
+.hr-live-review p[role=alert]{color:#a0342d;font-size:12px;overflow-wrap:anywhere}
+.hr-live-pagination{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px}
+@media(max-width:700px){.hr-live-workspace{padding:16px}.hr-live-panel{padding:15px}}
